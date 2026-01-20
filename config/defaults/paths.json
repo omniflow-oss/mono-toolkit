@@ -1,0 +1,9 @@
+{
+  "backServices": "back/services",
+  "backLibs": "back/libs",
+  "frontApps": "front/apps",
+  "frontPackages": "front/packages",
+  "contracts": "contracts",
+  "docs": "docs",
+  "infra": "infra"
+}

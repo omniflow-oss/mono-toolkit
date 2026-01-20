@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["toolingPrefixes", "contractsPrefix", "docsPrefix", "defaultBaseBranch"],
+  "properties": {
+    "toolingPrefixes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "contractsPrefix": { "type": "string" },
+    "docsPrefix": { "type": "string" },
+    "defaultBaseBranch": { "type": "string" }
+  },
+  "additionalProperties": false
+}

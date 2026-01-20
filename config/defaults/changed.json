@@ -1,0 +1,14 @@
+{
+  "toolingPrefixes": [
+    "config/",
+    "schemas/",
+    "templates/",
+    "src/",
+    "package.json",
+    "pnpm-lock.yaml",
+    "tsconfig.json"
+  ],
+  "contractsPrefix": "contracts/",
+  "docsPrefix": "docs/",
+  "defaultBaseBranch": "main"
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "backServices",
+    "backLibs",
+    "frontApps",
+    "frontPackages",
+    "contracts",
+    "docs",
+    "infra"
+  ],
+  "properties": {
+    "backServices": { "type": "string" },
+    "backLibs": { "type": "string" },
+    "frontApps": { "type": "string" },
+    "frontPackages": { "type": "string" },
+    "contracts": { "type": "string" },
+    "docs": { "type": "string" },
+    "infra": { "type": "string" }
+  },
+  "additionalProperties": false
+}

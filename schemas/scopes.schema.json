@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["overrides", "exclude"],
+  "properties": {
+    "overrides": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "profile": { "type": "string" },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "port": { "type": "integer" },
+          "deps": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "exclude": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

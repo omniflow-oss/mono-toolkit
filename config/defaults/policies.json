@@ -1,0 +1,4 @@
+{
+  "sanitizePattern": "[a-z0-9-]",
+  "maxNameLength": 64
+}

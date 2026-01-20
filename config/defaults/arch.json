@@ -1,0 +1,4 @@
+{
+  "enabled": true,
+  "templatePath": "config/tools/archunit/ArchRules.java.template"
+}

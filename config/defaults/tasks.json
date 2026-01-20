@@ -1,0 +1,44 @@
+{
+  "jobs": 4,
+  "pipelines": {
+    "bootstrap": ["noop"],
+    "dev": ["noop"],
+    "check": ["lint", "typecheck", "test", "build"],
+    "fmt": ["fmt"],
+    "lint": ["lint"],
+    "typecheck": ["typecheck"],
+    "test": ["test"],
+    "build": ["build"],
+    "contracts:lint": ["contracts:lint"],
+    "contracts:drift": ["contracts:drift"],
+    "contracts:breaking": ["contracts:breaking"],
+    "contracts:build": ["contracts:build"],
+    "docs:lint": ["docs:lint"],
+    "docs:build": ["docs:build"],
+    "docs:serve": ["docs:serve"],
+    "tooling:test": ["tooling:test"],
+    "tooling:test:e2e": ["tooling:test:e2e"]
+  },
+  "profiles": {
+    "default": { "executor": "pnpm" },
+    "maven": { "executor": "maven" },
+    "custom": { "executor": "custom" }
+  },
+  "taskGraph": {
+    "noop": { "command": ["/bin/true"] },
+    "fmt": { "command": ["fmt"] },
+    "lint": { "command": ["lint"] },
+    "typecheck": { "command": ["typecheck"] },
+    "test": { "command": ["test"] },
+    "build": { "command": ["build"] },
+    "contracts:lint": { "command": ["contracts:lint"] },
+    "contracts:drift": { "command": ["contracts:drift"] },
+    "contracts:breaking": { "command": ["contracts:breaking"] },
+    "contracts:build": { "command": ["contracts:build"] },
+    "docs:lint": { "command": ["docs:lint"] },
+    "docs:build": { "command": ["docs:build"] },
+    "docs:serve": { "command": ["docs:serve"] },
+    "tooling:test": { "command": ["tooling:test"] },
+    "tooling:test:e2e": { "command": ["tooling:test:e2e"] }
+  }
+}

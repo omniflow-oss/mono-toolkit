@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["defaultBranch", "allowFetchBase"],
+  "properties": {
+    "defaultBranch": { "type": "string" },
+    "allowFetchBase": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

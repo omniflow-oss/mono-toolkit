@@ -1,0 +1,12 @@
+services:
+  tools:
+    build:
+      context: .
+      dockerfile: Dockerfile.tools
+    working_dir: /workspace
+    volumes:
+      - ../:/workspace
+      - ../.cache/mono-toolkit/cache/pnpm-store:/pnpm-store
+      - ../.cache/mono-toolkit/cache/m2:/home/dev/.m2
+    user: "${UID:-1000}:${GID:-1000}"
+    entrypoint: ["mono-toolkit"]

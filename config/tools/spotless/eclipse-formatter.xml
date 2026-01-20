@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profiles version="21">
+  <profile kind="CodeFormatterProfile" name="mono-toolkit" version="21">
+  </profile>
+</profiles>

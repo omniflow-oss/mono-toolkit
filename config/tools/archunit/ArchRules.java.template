@@ -1,0 +1,5 @@
+package {{packageName}};
+
+public class ArchRules {
+  // TODO: add ArchUnit rules here.
+}
