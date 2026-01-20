@@ -52,6 +52,21 @@ export const selectScopes = async (options: {
     return options.scopes;
   }
 
-  const scopeMap = new Set(changedScopes);
+  const scopeMap = new Set(changedScopes.filter((entry) => !entry.startsWith("__")));
+  if (changedScopes.includes("__CONTRACTS__")) {
+    for (const scope of options.scopes) {
+      if (scope.type === "service") {
+        scopeMap.add(scope.id);
+      }
+    }
+  }
+  if (changedScopes.includes("__DOCS__")) {
+    for (const scope of options.scopes) {
+      if (scope.type === "docs") {
+        scopeMap.add(scope.id);
+      }
+    }
+  }
+
   return options.scopes.filter((scope) => scopeMap.has(scope.id));
 };

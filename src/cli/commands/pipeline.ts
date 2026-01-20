@@ -9,7 +9,23 @@ import { ensureCacheLayout } from "../../reports/cache";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
 
 export const createPipelineCommand = (pipeline: string, brief: string) =>
-  buildCommand({
+  buildCommand<
+    {
+      scope?: string;
+      tag?: string;
+      changed: boolean;
+      all: boolean;
+      since?: string;
+      base?: string;
+      jobs?: number;
+      dryRun: boolean;
+      json: boolean;
+      ci: boolean;
+      verbose: boolean;
+    },
+    [],
+    CommandContext
+  >({
     parameters: {
       flags: {
         ...selectionFlags,
@@ -47,14 +63,21 @@ export const createPipelineCommand = (pipeline: string, brief: string) =>
           pipeline,
           scopes: selected,
           tasksConfig: config.tasks,
-          dryRun: flags.dryRun
+          dryRun: flags.dryRun,
+          config
         });
         await writeSummaryReport(repoRoot, {
           pipeline,
           status: "success",
           scopes: results.map((scope) => ({
             id: scope.scopeId,
-            tasks: scope.tasks.map((task) => ({ id: task.taskId, exitCode: task.exitCode }))
+            tasks: scope.tasks.map((task) => ({
+              id: task.taskId,
+              exitCode: task.exitCode,
+              command: task.command,
+              durationMs: task.durationMs,
+              cached: task.cached
+            }))
           }))
         });
         if (flags.json) {

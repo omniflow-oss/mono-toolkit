@@ -5,6 +5,7 @@ import { buildCommand } from "@stricli/core";
 import { loadRepoContext } from "./shared";
 import { sanitizeName } from "../../scaffold/sanitize";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
+import { assertPathWithinRoot } from "../../core/fs";
 
 const typeOptions = ["service", "lib", "app", "package", "feature"] as const;
 type DeleteType = (typeof typeOptions)[number];
@@ -16,7 +17,11 @@ const typeRoots = (paths: { backServices: string; backLibs: string; frontApps: s
   package: paths.frontPackages
 });
 
-export const deleteCommand = buildCommand({
+export const deleteCommand = buildCommand<
+  { in?: string; json: boolean },
+  [string, string],
+  CommandContext
+>({
   parameters: {
     positional: {
       kind: "tuple",
@@ -37,7 +42,7 @@ export const deleteCommand = buildCommand({
       if (!typeOptions.includes(type as DeleteType)) {
         throw new Error(`Unknown type: ${type}`);
       }
-      const { repoRoot, config, scopes } = await loadRepoContext(context);
+      const { repoRoot, config, scopes } = await loadRepoContext(context as { cwd?: string });
       const sanitized = sanitizeName(name, config.policies);
       const roots = typeRoots(config.paths);
       let targetDir = "";
@@ -53,6 +58,8 @@ export const deleteCommand = buildCommand({
       } else {
         targetDir = path.join(repoRoot, roots[type as Exclude<DeleteType, "feature">], sanitized);
       }
+
+      assertPathWithinRoot(repoRoot, targetDir, "target");
 
       await fs.rm(targetDir, { recursive: true, force: true });
 

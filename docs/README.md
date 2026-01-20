@@ -1,3 +1,13 @@
 # Mono-Toolkit Docs
 
-VitePress content goes here.
+Run the documentation site locally:
+
+```bash
+pnpm docs:dev
+```
+
+Build the site:
+
+```bash
+pnpm docs:build
+```

@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { ExitCode, ToolkitError } from "./errors";
 
 export const pathExists = async (filePath: string): Promise<boolean> => {
   try {
@@ -54,4 +55,16 @@ export const copyDirIfMissing = async (sourceDir: string, targetDir: string): Pr
       }
     })
   );
+};
+
+export const assertPathWithinRoot = (root: string, target: string, label = "path"): void => {
+  const resolvedRoot = path.resolve(root);
+  const resolvedTarget = path.resolve(target);
+  const prefix = resolvedRoot.endsWith(path.sep) ? resolvedRoot : resolvedRoot + path.sep;
+  if (resolvedTarget !== resolvedRoot && !resolvedTarget.startsWith(prefix)) {
+    throw new ToolkitError(`Invalid ${label} outside repository root`, ExitCode.InvalidConfig, {
+      root: resolvedRoot,
+      target: resolvedTarget
+    });
+  }
 };

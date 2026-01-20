@@ -2,16 +2,23 @@ import path from "node:path";
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
 import { execCommand } from "../../core/exec";
+import { assertPathWithinRoot } from "../../core/fs";
+import { ExitCode, ToolkitError } from "../../core/errors";
 import { loadRepoContext } from "./shared";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
 
-const runInfra = async (
-  context: CommandContext,
-  subcommand: string[],
-  json: boolean
-): Promise<void> => {
-  const { repoRoot, config } = await loadRepoContext(context);
+type InfraFlags = { json: boolean };
+
+const runInfra = async (context: CommandContext, subcommand: string[], json: boolean): Promise<void> => {
+  const { repoRoot, config } = await loadRepoContext(context as { cwd?: string });
   const composeFile = path.join(repoRoot, config.docker.infraCompose);
+  assertPathWithinRoot(repoRoot, composeFile, "infra compose file");
+  const allowedCommands = new Set(["docker", "podman"]);
+  if (!allowedCommands.has(config.docker.command)) {
+    throw new ToolkitError("Unsupported docker command", ExitCode.InvalidConfig, {
+      command: config.docker.command
+    });
+  }
   const result = await execCommand(config.docker.command, ["compose", "-f", composeFile, ...subcommand], {
     cwd: repoRoot
   });
@@ -30,7 +37,7 @@ const runInfra = async (
   }
 };
 
-export const infraUpCommand = buildCommand({
+export const infraUpCommand = buildCommand<InfraFlags, [], CommandContext>({
   parameters: { flags: { json: { kind: "boolean", brief: "Output JSON", default: false } } },
   docs: { brief: "Start infra services" },
   func: async function (flags) {
@@ -43,7 +50,7 @@ export const infraUpCommand = buildCommand({
   }
 });
 
-export const infraDownCommand = buildCommand({
+export const infraDownCommand = buildCommand<InfraFlags, [], CommandContext>({
   parameters: { flags: { json: { kind: "boolean", brief: "Output JSON", default: false } } },
   docs: { brief: "Stop infra services" },
   func: async function (flags) {
@@ -56,7 +63,7 @@ export const infraDownCommand = buildCommand({
   }
 });
 
-export const infraPsCommand = buildCommand({
+export const infraPsCommand = buildCommand<InfraFlags, [], CommandContext>({
   parameters: { flags: { json: { kind: "boolean", brief: "Output JSON", default: false } } },
   docs: { brief: "List infra services" },
   func: async function (flags) {
@@ -69,7 +76,7 @@ export const infraPsCommand = buildCommand({
   }
 });
 
-export const infraLogsCommand = buildCommand({
+export const infraLogsCommand = buildCommand<InfraFlags, [], CommandContext>({
   parameters: { flags: { json: { kind: "boolean", brief: "Output JSON", default: false } } },
   docs: { brief: "Tail infra logs" },
   func: async function (flags) {

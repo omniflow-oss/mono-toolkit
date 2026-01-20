@@ -10,3 +10,5 @@ yarn-debug.log*
 yarn-error.log*
 .eslintcache
 .turbo/
+docs/.vitepress/dist/
+docs/.vitepress/cache/

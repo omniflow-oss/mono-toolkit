@@ -47,6 +47,7 @@ export interface ToolsConfig {
 export interface TaskDefinition {
   command: string[];
   env?: Record<string, string>;
+  deps?: string[];
   inputs?: string[];
   outputs?: string[];
   cacheable?: boolean;

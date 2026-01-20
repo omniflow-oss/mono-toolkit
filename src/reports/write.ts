@@ -8,6 +8,9 @@ export interface ReportSummary {
     tasks: Array<{
       id: string;
       exitCode: number;
+      command?: string[];
+      durationMs?: number;
+      cached?: boolean;
     }>;
   }>;
 }

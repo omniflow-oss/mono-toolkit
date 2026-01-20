@@ -6,6 +6,7 @@ import { loadRepoContext } from "./shared";
 import { getPackageRoot } from "../../core/package-root";
 import { sanitizeName } from "../../scaffold/sanitize";
 import { renderTemplateDir } from "../../scaffold/template";
+import { assertPathWithinRoot } from "../../core/fs";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
 
 const typeOptions = ["service", "lib", "app", "package", "feature"] as const;
@@ -18,7 +19,11 @@ const typeRoots = (paths: { backServices: string; backLibs: string; frontApps: s
   package: paths.frontPackages
 });
 
-export const newCommand = buildCommand({
+export const newCommand = buildCommand<
+  { in?: string; json: boolean },
+  [string, string],
+  CommandContext
+>({
   parameters: {
     positional: {
       kind: "tuple",
@@ -39,7 +44,7 @@ export const newCommand = buildCommand({
       if (!typeOptions.includes(type as CreateType)) {
         throw new Error(`Unknown type: ${type}`);
       }
-      const { repoRoot, config, scopes } = await loadRepoContext(context);
+      const { repoRoot, config, scopes } = await loadRepoContext(context as { cwd?: string });
       const sanitized = sanitizeName(name, config.policies);
       const packageRoot = getPackageRoot();
       const roots = typeRoots(config.paths);
@@ -56,6 +61,8 @@ export const newCommand = buildCommand({
       } else {
         targetDir = path.join(repoRoot, roots[type as Exclude<CreateType, "feature">], sanitized);
       }
+
+      assertPathWithinRoot(repoRoot, targetDir, "target");
 
       if (await fs.stat(targetDir).then(() => true).catch(() => false)) {
         throw new Error(`Target already exists: ${targetDir}`);
