@@ -45,8 +45,10 @@ export const initCommand = buildCommand<{ json: boolean }, [], CommandContext>({
 
 		await ensureCacheLayout(repoRoot);
 
-		await ensureDir(path.join(repoRoot, "contracts"));
-		await ensureDir(path.join(repoRoot, "docs"));
+		const contractsDir = path.join(repoRoot, "contracts");
+		const docsDir = path.join(repoRoot, "docs");
+		await ensureDir(contractsDir);
+		await ensureDir(docsDir);
 
 		const infraDir = path.join(repoRoot, "infra");
 		await ensureDir(infraDir);
@@ -61,6 +63,21 @@ export const initCommand = buildCommand<{ json: boolean }, [], CommandContext>({
 		await copyFileIfMissing(
 			path.join(packageRoot, "templates", "infra", "Dockerfile.tools"),
 			path.join(infraDir, "Dockerfile.tools"),
+		);
+
+		await copyFileIfMissing(
+			path.join(packageRoot, "config", "tools", "spectral", ".spectral.yaml"),
+			path.join(contractsDir, ".spectral.yaml"),
+		);
+		const exampleDir = path.join(contractsDir, "example");
+		await ensureDir(exampleDir);
+		await copyFileIfMissing(
+			path.join(packageRoot, "templates", "contracts", "openapi.yaml"),
+			path.join(exampleDir, "openapi.yaml"),
+		);
+		await copyFileIfMissing(
+			path.join(packageRoot, "templates", "contracts", "README.md"),
+			path.join(contractsDir, "README.md"),
 		);
 
 		const biomeRouter = path.join(repoRoot, "biome.jsonc");

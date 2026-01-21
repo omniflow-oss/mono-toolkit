@@ -78,7 +78,6 @@ Provide **one deterministic, Docker-first monorepo toolkit** usable via `npx` or
 
 * `init`
 * `doctor` (`doctor --fix` supported)
-* `bootstrap`
 * `dev`
 * `check`
 * `fmt`
@@ -635,4 +634,3 @@ Each has a JSON schema under `schemas/**`.
 * openapi drift normalization + ignore rules
 * Nuxt runtime plugin generation
 * toolkit VitePress docs
-
