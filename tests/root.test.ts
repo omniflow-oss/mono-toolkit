@@ -16,4 +16,16 @@ describe("findRepoRoot", () => {
 		const root = await findRepoRoot(nested);
 		expect(root).toBe(dir);
 	});
+
+	it("finds root by package.json", async () => {
+		const dir = await fs.mkdtemp(path.join(os.tmpdir(), "mono-toolkit-"));
+		await fs.writeFile(
+			path.join(dir, "package.json"),
+			JSON.stringify({ name: "demo" }),
+		);
+		const nested = path.join(dir, "a", "b");
+		await fs.mkdir(nested, { recursive: true });
+		const root = await findRepoRoot(nested);
+		expect(root).toBe(dir);
+	});
 });

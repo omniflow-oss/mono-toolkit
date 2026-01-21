@@ -22,6 +22,15 @@ const hasPrivatePackageJson = async (dirPath: string): Promise<boolean> => {
 	}
 };
 
+const hasPackageJson = async (dirPath: string): Promise<boolean> => {
+	try {
+		await fs.access(path.join(dirPath, "package.json"));
+		return true;
+	} catch {
+		return false;
+	}
+};
+
 export const findRepoRoot = async (
 	startDir: string,
 ): Promise<string | null> => {
@@ -29,7 +38,8 @@ export const findRepoRoot = async (
 	while (true) {
 		if (
 			(await hasPnpmWorkspace(current)) ||
-			(await hasPrivatePackageJson(current))
+			(await hasPrivatePackageJson(current)) ||
+			(await hasPackageJson(current))
 		) {
 			return current;
 		}
