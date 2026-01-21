@@ -1,4 +1,4 @@
 {
-  "defaultBranch": "main",
-  "allowFetchBase": true
+	"defaultBranch": "main",
+	"allowFetchBase": true
 }

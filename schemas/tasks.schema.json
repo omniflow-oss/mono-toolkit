@@ -1,62 +1,62 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "required": ["jobs", "pipelines", "profiles", "taskGraph"],
-  "properties": {
-    "jobs": { "type": "integer", "minimum": 1 },
-    "pipelines": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "array",
-        "items": { "type": "string" }
-      }
-    },
-    "profiles": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "required": ["executor"],
-        "properties": {
-          "executor": { "type": "string", "enum": ["pnpm", "maven", "custom"] },
-          "baseArgs": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "taskGraph": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "required": ["command"],
-        "properties": {
-          "command": {
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "env": {
-            "type": "object",
-            "additionalProperties": { "type": "string" }
-          },
-          "deps": {
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "inputs": {
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "outputs": {
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "cacheable": { "type": "boolean" }
-        },
-        "additionalProperties": false
-      }
-    }
-  },
-  "additionalProperties": false
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"type": "object",
+	"required": ["jobs", "pipelines", "profiles", "taskGraph"],
+	"properties": {
+		"jobs": { "type": "integer", "minimum": 1 },
+		"pipelines": {
+			"type": "object",
+			"additionalProperties": {
+				"type": "array",
+				"items": { "type": "string" }
+			}
+		},
+		"profiles": {
+			"type": "object",
+			"additionalProperties": {
+				"type": "object",
+				"required": ["executor"],
+				"properties": {
+					"executor": { "type": "string", "enum": ["pnpm", "maven", "custom"] },
+					"baseArgs": {
+						"type": "array",
+						"items": { "type": "string" }
+					}
+				},
+				"additionalProperties": false
+			}
+		},
+		"taskGraph": {
+			"type": "object",
+			"additionalProperties": {
+				"type": "object",
+				"required": ["command"],
+				"properties": {
+					"command": {
+						"type": "array",
+						"items": { "type": "string" }
+					},
+					"env": {
+						"type": "object",
+						"additionalProperties": { "type": "string" }
+					},
+					"deps": {
+						"type": "array",
+						"items": { "type": "string" }
+					},
+					"inputs": {
+						"type": "array",
+						"items": { "type": "string" }
+					},
+					"outputs": {
+						"type": "array",
+						"items": { "type": "string" }
+					},
+					"cacheable": { "type": "boolean" }
+				},
+				"additionalProperties": false
+			}
+		}
+	},
+	"additionalProperties": false
 }

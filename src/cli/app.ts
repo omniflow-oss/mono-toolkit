@@ -1,60 +1,87 @@
 import { buildApplication, buildRouteMap } from "@stricli/core";
 import { initCommand } from "./commands/init";
 import { doctorCommand } from "./commands/doctor";
-import { listScopesCommand, listPortsCommand, listChangedCommand } from "./commands/list";
+import {
+	listScopesCommand,
+	listPortsCommand,
+	listChangedCommand,
+} from "./commands/list";
 import { createPipelineCommand } from "./commands/pipeline";
-import { infraUpCommand, infraDownCommand, infraPsCommand, infraLogsCommand } from "./commands/infra";
+import {
+	infraUpCommand,
+	infraDownCommand,
+	infraPsCommand,
+	infraLogsCommand,
+} from "./commands/infra";
 import { newCommand } from "./commands/new";
 import { deleteCommand } from "./commands/delete";
 import { getPackageVersion } from "../core/version";
 
 export const createApp = async () => {
-  const routes = buildRouteMap({
-    routes: {
-      init: initCommand,
-      doctor: doctorCommand,
-      bootstrap: createPipelineCommand("bootstrap", "Bootstrap repository"),
-      dev: createPipelineCommand("dev", "Run dev pipeline"),
-      check: createPipelineCommand("check", "Run check pipeline"),
-      fmt: createPipelineCommand("fmt", "Format code"),
-      lint: createPipelineCommand("lint", "Lint code"),
-      typecheck: createPipelineCommand("typecheck", "Typecheck code"),
-      test: createPipelineCommand("test", "Run tests"),
-      build: createPipelineCommand("build", "Build scopes"),
-      "list:scopes": listScopesCommand,
-      "list:ports": listPortsCommand,
-      "list:changed": listChangedCommand,
-      "contracts:lint": createPipelineCommand("contracts:lint", "Lint OpenAPI contracts"),
-      "contracts:drift": createPipelineCommand("contracts:drift", "Check OpenAPI drift"),
-      "contracts:breaking": createPipelineCommand("contracts:breaking", "Check OpenAPI breaking changes"),
-      "contracts:build": createPipelineCommand("contracts:build", "Build OpenAPI artifacts"),
-      "docs:lint": createPipelineCommand("docs:lint", "Lint docs"),
-      "docs:build": createPipelineCommand("docs:build", "Build docs"),
-      "docs:serve": createPipelineCommand("docs:serve", "Serve docs"),
-      "infra:up": infraUpCommand,
-      "infra:down": infraDownCommand,
-      "infra:ps": infraPsCommand,
-      "infra:logs": infraLogsCommand,
-      new: newCommand,
-      delete: deleteCommand,
-      "tooling:test": createPipelineCommand("tooling:test", "Run tooling tests"),
-      "tooling:test:e2e": createPipelineCommand("tooling:test:e2e", "Run tooling e2e tests")
-    },
-    docs: {
-      brief: "mono-toolkit CLI"
-    }
-  });
+	const routes = buildRouteMap({
+		routes: {
+			init: initCommand,
+			doctor: doctorCommand,
+			bootstrap: createPipelineCommand("bootstrap", "Bootstrap repository"),
+			dev: createPipelineCommand("dev", "Run dev pipeline"),
+			check: createPipelineCommand("check", "Run check pipeline"),
+			fmt: createPipelineCommand("fmt", "Format code"),
+			lint: createPipelineCommand("lint", "Lint code"),
+			typecheck: createPipelineCommand("typecheck", "Typecheck code"),
+			test: createPipelineCommand("test", "Run tests"),
+			build: createPipelineCommand("build", "Build scopes"),
+			"list:scopes": listScopesCommand,
+			"list:ports": listPortsCommand,
+			"list:changed": listChangedCommand,
+			"contracts:lint": createPipelineCommand(
+				"contracts:lint",
+				"Lint OpenAPI contracts",
+			),
+			"contracts:drift": createPipelineCommand(
+				"contracts:drift",
+				"Check OpenAPI drift",
+			),
+			"contracts:breaking": createPipelineCommand(
+				"contracts:breaking",
+				"Check OpenAPI breaking changes",
+			),
+			"contracts:build": createPipelineCommand(
+				"contracts:build",
+				"Build OpenAPI artifacts",
+			),
+			"docs:lint": createPipelineCommand("docs:lint", "Lint docs"),
+			"docs:build": createPipelineCommand("docs:build", "Build docs"),
+			"docs:serve": createPipelineCommand("docs:serve", "Serve docs"),
+			"infra:up": infraUpCommand,
+			"infra:down": infraDownCommand,
+			"infra:ps": infraPsCommand,
+			"infra:logs": infraLogsCommand,
+			new: newCommand,
+			delete: deleteCommand,
+			"tooling:test": createPipelineCommand(
+				"tooling:test",
+				"Run tooling tests",
+			),
+			"tooling:test:e2e": createPipelineCommand(
+				"tooling:test:e2e",
+				"Run tooling e2e tests",
+			),
+		},
+		docs: {
+			brief: "mono-toolkit CLI",
+		},
+	});
 
-  return buildApplication(routes, {
-    name: "mono-toolkit",
-    versionInfo: {
-      currentVersion: await getPackageVersion()
-    },
-    scanner: {
-      caseStyle: "allow-kebab-for-camel"
-    },
-    documentation: {
-      useAliasInUsageLine: true
-    }
-  });
+	return buildApplication(routes, {
+		name: "mono-toolkit",
+		versionInfo: {
+			currentVersion: await getPackageVersion(),
+		},
+		scanner: {
+			caseStyle: "allow-kebab-for-camel",
+		},
+		documentation: {
+			useAliasInUsageLine: true,
+		},
+	});
 };

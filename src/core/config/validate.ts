@@ -12,24 +12,31 @@ addFormats(ajv);
 const validatorCache = new Map<string, ValidateFunction>();
 
 const loadValidator = async (schemaName: string): Promise<ValidateFunction> => {
-  const cached = validatorCache.get(schemaName);
-  if (cached) {
-    return cached;
-  }
-  const schemaPath = path.join(getPackageRoot(), "schemas", `${schemaName}.schema.json`);
-  const schema = await readJsonFile<AnySchema>(schemaPath);
-  const validator = ajv.compile(schema);
-  validatorCache.set(schemaName, validator);
-  return validator;
+	const cached = validatorCache.get(schemaName);
+	if (cached) {
+		return cached;
+	}
+	const schemaPath = path.join(
+		getPackageRoot(),
+		"schemas",
+		`${schemaName}.schema.json`,
+	);
+	const schema = await readJsonFile<AnySchema>(schemaPath);
+	const validator = ajv.compile(schema);
+	validatorCache.set(schemaName, validator);
+	return validator;
 };
 
-export const validateConfig = async (schemaName: string, data: unknown): Promise<void> => {
-  const validator = await loadValidator(schemaName);
-  const valid = validator(data);
-  if (!valid) {
-    throw new ToolkitError("Invalid configuration", ExitCode.InvalidConfig, {
-      schema: schemaName,
-      errors: validator.errors ?? []
-    });
-  }
+export const validateConfig = async (
+	schemaName: string,
+	data: unknown,
+): Promise<void> => {
+	const validator = await loadValidator(schemaName);
+	const valid = validator(data);
+	if (!valid) {
+		throw new ToolkitError("Invalid configuration", ExitCode.InvalidConfig, {
+			schema: schemaName,
+			errors: validator.errors ?? [],
+		});
+	}
 };

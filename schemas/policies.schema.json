@@ -1,10 +1,10 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "required": ["sanitizePattern", "maxNameLength"],
-  "properties": {
-    "sanitizePattern": { "type": "string" },
-    "maxNameLength": { "type": "integer", "minimum": 1 }
-  },
-  "additionalProperties": false
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"type": "object",
+	"required": ["sanitizePattern", "maxNameLength"],
+	"properties": {
+		"sanitizePattern": { "type": "string" },
+		"maxNameLength": { "type": "integer", "minimum": 1 }
+	},
+	"additionalProperties": false
 }

@@ -1,7 +1,7 @@
 {
-  "composeFile": "infra/tools.compose.yaml",
-  "service": "tools",
-  "entry": "toolkit",
-  "command": "docker",
-  "infraCompose": "infra/compose.yaml"
+	"composeFile": "infra/tools.compose.yaml",
+	"service": "tools",
+	"entry": "toolkit",
+	"command": "docker",
+	"infraCompose": "infra/compose.yaml"
 }
