@@ -49,7 +49,10 @@ jobs:
         if: steps.autosemver.outputs.released == 'true'
         run: pnpm build
       - name: Publish
-        if: steps.autosemver.outputs.released == 'true'
+        if: steps.autosemver.outputs.released == 'true' && secrets.NPM_TOKEN != ''
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish skipped (missing token)
+        if: steps.autosemver.outputs.released == 'true' && secrets.NPM_TOKEN == ''
+        run: echo "NPM_TOKEN is not configured; skipping publish."
