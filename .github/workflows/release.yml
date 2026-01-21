@@ -38,6 +38,9 @@ jobs:
       - name: Update lockfile
         if: steps.autosemver.outputs.released == 'true'
         run: pnpm install --lockfile-only
+      - name: Format package.json
+        if: steps.autosemver.outputs.released == 'true'
+        run: pnpm biome format --write package.json
       - name: Commit release
         if: steps.autosemver.outputs.released == 'true'
         run: |
