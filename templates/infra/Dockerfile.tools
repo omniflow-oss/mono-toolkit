@@ -1,9 +1,11 @@
-FROM ghcr.io/graalvm/native-image-community:23.0
+FROM eclipse-temurin:21-jdk
 
 ARG OASDIFF_VERSION=1.10.1
 
-RUN microdnf install -y \
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
 		bash \
+		ca-certificates \
 		curl \
 		git \
 		maven \
@@ -12,7 +14,7 @@ RUN microdnf install -y \
 		tar \
 		unzip \
 		zip \
-	&& microdnf clean all
+	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
 

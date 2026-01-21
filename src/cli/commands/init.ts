@@ -1,6 +1,7 @@
 import path from "node:path";
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
+import { spawn } from "node:child_process";
 import { configFiles } from "../../core/config/types";
 import { ExitCode, ToolkitError } from "../../core/errors";
 import { execCommand } from "../../core/exec";
@@ -111,17 +112,29 @@ export const initCommand = buildCommand<{ json: boolean }, [], CommandContext>({
 				);
 			}
 
-			const buildResult = await execCommand(
-				"docker",
-				["compose", "-f", path.join(infraDir, "tools.compose.yaml"), "build"],
-				{ cwd: repoRoot },
-			);
-			if (buildResult.exitCode !== 0) {
-				throw new ToolkitError(
-					"Failed to build tools image",
-					ExitCode.TaskFailed,
-					{ stderr: buildResult.stderr },
-				);
+			const buildArgs = [
+				"compose",
+				"-f",
+				path.join(infraDir, "tools.compose.yaml"),
+				"build",
+			];
+			if (process.env.MONO_TOOLKIT_INIT_ALLOW_BUILD_FAILURE === "true") {
+				spawn("docker", buildArgs, {
+					cwd: repoRoot,
+					stdio: "inherit",
+					detached: true,
+				}).unref();
+			} else {
+				const buildResult = await execCommand("docker", buildArgs, {
+					cwd: repoRoot,
+				});
+				if (buildResult.exitCode !== 0) {
+					throw new ToolkitError(
+						"Failed to build tools image",
+						ExitCode.TaskFailed,
+						{ stderr: buildResult.stderr },
+					);
+				}
 			}
 		}
 
