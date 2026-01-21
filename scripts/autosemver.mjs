@@ -71,6 +71,13 @@ if (!bump) {
 const nextVersion = bumpVersion(pkg.version, bump);
 pkg.version = nextVersion;
 writeFileSync("package.json", `${JSON.stringify(pkg, null, 2)}\n`);
+try {
+	execSync("pnpm biome format --write package.json", {
+		stdio: "ignore",
+	});
+} catch {
+	// ignore formatting failures
+}
 emit("released", "true");
 emit("version", nextVersion);
 console.log(`Next version: ${nextVersion}`);
