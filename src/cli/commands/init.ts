@@ -2,6 +2,8 @@ import path from "node:path";
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
 import { configFiles } from "../../core/config/types";
+import { ExitCode, ToolkitError } from "../../core/errors";
+import { execCommand } from "../../core/exec";
 import {
 	copyDirIfMissing,
 	copyFileIfMissing,
@@ -79,6 +81,49 @@ export const initCommand = buildCommand<{ json: boolean }, [], CommandContext>({
 			path.join(packageRoot, "templates", "contracts", "README.md"),
 			path.join(contractsDir, "README.md"),
 		);
+
+		const packageJsonPath = path.join(repoRoot, "package.json");
+		if (!(await pathExists(packageJsonPath))) {
+			await writeJsonFile(packageJsonPath, {
+				name: "mono-toolkit-repo",
+				private: true,
+				version: "0.0.0",
+				scripts: {
+					"docs:lint": "markdownlint-cli2 'docs/**/*.md'",
+				},
+			});
+		}
+
+		await ensureDir(path.join(repoRoot, "back", "services"));
+		await ensureDir(path.join(repoRoot, "back", "libs"));
+		await ensureDir(path.join(repoRoot, "front", "apps"));
+		await ensureDir(path.join(repoRoot, "front", "packages"));
+
+		if (!process.env.MONO_TOOLKIT_INIT_SKIP_COMMANDS) {
+			const installResult = await execCommand("pnpm", ["install"], {
+				cwd: repoRoot,
+			});
+			if (installResult.exitCode !== 0) {
+				throw new ToolkitError(
+					"Failed to install dependencies",
+					ExitCode.TaskFailed,
+					{ stderr: installResult.stderr },
+				);
+			}
+
+			const buildResult = await execCommand(
+				"docker",
+				["compose", "-f", path.join(infraDir, "tools.compose.yaml"), "build"],
+				{ cwd: repoRoot },
+			);
+			if (buildResult.exitCode !== 0) {
+				throw new ToolkitError(
+					"Failed to build tools image",
+					ExitCode.TaskFailed,
+					{ stderr: buildResult.stderr },
+				);
+			}
+		}
 
 		const biomeRouter = path.join(repoRoot, "biome.jsonc");
 		if (!(await pathExists(biomeRouter))) {

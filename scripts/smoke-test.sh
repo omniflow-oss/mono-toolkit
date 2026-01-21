@@ -39,7 +39,7 @@ info:
 paths: {}
 EOF
 
-npx mono-toolkit init
+MONO_TOOLKIT_INIT_SKIP_COMMANDS=true npx mono-toolkit init
 npx mono-toolkit doctor --json
 
 npx mono-toolkit list:scopes --json
