@@ -1,6 +1,6 @@
 {
 	"name": "@ofcx/mono-toolkit",
-	"version": "0.1.10",
+	"version": "0.1.11",
 	"description": "Deterministic Docker-first monorepo toolkit",
 	"private": false,
 	"license": "MIT",
