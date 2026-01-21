@@ -16,5 +16,6 @@ export const runInDocker = async (options: {
 	return execCommand(command, args, {
 		cwd: options.repoRoot,
 		env: options.env,
+		stream: true,
 	});
 };

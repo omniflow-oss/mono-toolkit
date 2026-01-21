@@ -103,6 +103,7 @@ export const initCommand = buildCommand<{ json: boolean }, [], CommandContext>({
 		if (!process.env.MONO_TOOLKIT_INIT_SKIP_COMMANDS) {
 			const installResult = await execCommand("pnpm", ["install"], {
 				cwd: repoRoot,
+				stream: true,
 			});
 			if (installResult.exitCode !== 0) {
 				throw new ToolkitError(
@@ -127,6 +128,7 @@ export const initCommand = buildCommand<{ json: boolean }, [], CommandContext>({
 			} else {
 				const buildResult = await execCommand("docker", buildArgs, {
 					cwd: repoRoot,
+					stream: true,
 				});
 				if (buildResult.exitCode !== 0) {
 					if (process.env.MONO_TOOLKIT_INIT_STRICT_BUILD === "true") {

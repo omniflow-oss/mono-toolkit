@@ -21,6 +21,9 @@ export interface ScopeReport {
 	tasks: ReportSummary["scopes"][number]["tasks"];
 }
 
+const sanitizePathSegment = (value: string): string =>
+	value.replace(/[^a-zA-Z0-9_-]/g, "_");
+
 export const writeSummaryReport = async (
 	repoRoot: string,
 	summary: ReportSummary,
@@ -36,4 +39,25 @@ export const writeScopeReport = async (
 	const safeId = scope.id.replace(/[^a-zA-Z0-9_-]/g, "_");
 	const content = `${JSON.stringify(scope, null, 2)}\n`;
 	await writeReportFile(repoRoot, `reports/scopes/${safeId}.json`, content);
+};
+
+export const writeTaskLogs = async (options: {
+	repoRoot: string;
+	scopeId: string;
+	taskId: string;
+	stdout: string;
+	stderr: string;
+}): Promise<void> => {
+	const scopeSegment = sanitizePathSegment(options.scopeId);
+	const taskSegment = sanitizePathSegment(options.taskId);
+	await writeReportFile(
+		options.repoRoot,
+		`reports/logs/${scopeSegment}/${taskSegment}.stdout.log`,
+		options.stdout,
+	);
+	await writeReportFile(
+		options.repoRoot,
+		`reports/logs/${scopeSegment}/${taskSegment}.stderr.log`,
+		options.stderr,
+	);
 };

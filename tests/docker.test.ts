@@ -140,7 +140,7 @@ describe("runInDocker", () => {
 				"toolkit",
 				"lint",
 			],
-			{ cwd: repoRoot, env: undefined },
+			{ cwd: repoRoot, env: undefined, stream: true },
 		);
 	});
 });

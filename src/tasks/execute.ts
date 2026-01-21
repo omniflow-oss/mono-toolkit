@@ -13,6 +13,7 @@ import { ExitCode, ToolkitError } from "../core/errors";
 import { execCommand } from "../core/exec";
 import { runInDocker } from "../docker/runner";
 import { runDocsTask } from "../docs/runner";
+import { writeTaskLogs } from "../reports/write";
 import {
 	type TaskCache,
 	computeTaskInputsHash,
@@ -289,6 +290,13 @@ const runScope = async (options: {
 			cache: options.cache,
 		});
 		results.push(result);
+		await writeTaskLogs({
+			repoRoot: options.repoRoot,
+			scopeId: options.scope.id,
+			taskId,
+			stdout: result.stdout,
+			stderr: result.stderr,
+		});
 		if (result.exitCode !== 0) {
 			break;
 		}
@@ -416,7 +424,7 @@ export const runHostCommand = async (
 	if (!command) {
 		throw new ToolkitError("Missing command", ExitCode.TaskFailed);
 	}
-	return execCommand(command, rest, { cwd });
+	return execCommand(command, rest, { cwd, stream: true });
 };
 
 export const makeScopePath = (repoRoot: string, scope: ScopeRecord): string => {

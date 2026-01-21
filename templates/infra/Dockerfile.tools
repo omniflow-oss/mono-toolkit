@@ -18,7 +18,8 @@ RUN apt-get update \
 
 WORKDIR /workspace
 
-RUN corepack enable \
+RUN npm install -g corepack \
+	&& corepack enable \
 	&& corepack prepare pnpm@10.4.0 --activate
 
 RUN npm install -g \

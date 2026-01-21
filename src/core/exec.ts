@@ -50,7 +50,7 @@ const redactOutput = (
 export const execCommand = (
 	command: string,
 	args: string[],
-	options: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
+	options: { cwd?: string; env?: NodeJS.ProcessEnv; stream?: boolean } = {},
 ): Promise<ExecResult> => {
 	return new Promise((resolve, reject) => {
 		const child = spawn(command, args, {
@@ -64,9 +64,15 @@ export const execCommand = (
 
 		child.stdout.on("data", (chunk) => {
 			stdout += chunk.toString();
+			if (options.stream) {
+				process.stdout.write(chunk);
+			}
 		});
 		child.stderr.on("data", (chunk) => {
 			stderr += chunk.toString();
+			if (options.stream) {
+				process.stderr.write(chunk);
+			}
 		});
 
 		child.on("error", (error) => {
