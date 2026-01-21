@@ -11,3 +11,9 @@ Build the site:
 ```bash
 pnpm docs:build
 ```
+
+Lint docs:
+
+```bash
+pnpm docs:lint
+```

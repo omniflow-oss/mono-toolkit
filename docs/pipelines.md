@@ -21,3 +21,8 @@ Pipelines are defined in `config/tasks.json` under `pipelines` and map to task i
 ## Parallelism
 
 `tasks.jobs` controls parallel scopes.
+
+## Tooling pipelines
+
+Contracts and docs pipelines run via the toolkit runners and may write
+additional reports and artifacts under `.cache/mono-toolkit`.

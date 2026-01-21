@@ -21,6 +21,7 @@ Compares design vs runtime:
 - Fetches runtime spec from `http://localhost:<port>/q/openapi?format=json`.
 - Normalizes both specs.
 - Runs `oasdiff diff`.
+- Direction follows `contracts.authoritative` (design vs runtime).
 
 ```bash
 npx mono-toolkit contracts:drift --scope back:service:alpha

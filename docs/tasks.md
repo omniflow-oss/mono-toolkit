@@ -20,9 +20,11 @@ Tasks are defined in `config/tasks.json` under `taskGraph`.
 - `pnpm`: `pnpm -C <scope.path> ...`
 - `maven`: `mvn -pl <scope.path> -am ...`
 - `custom`: uses `baseArgs` + task command
+ 
+Tooling tasks (`contracts:*`, `docs:*`) are executed via the toolkit runner.
 
 ## Caching
 
-If `cacheable` is true and all outputs are newer than inputs, the task is skipped and marked `cached` in reports.
+If `cacheable` is true and the input hash matches the cached entry, the task is skipped and marked `cached` in reports.
 
 Metadata is stored at `.cache/mono-toolkit/cache/tasks.json` with input hashes and output paths.

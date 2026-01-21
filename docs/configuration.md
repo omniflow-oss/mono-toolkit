@@ -46,3 +46,8 @@ Contracts config example:
   }
 }
 ```
+
+Docs lint config:
+
+- `docs/.markdownlint.jsonc`
+- `docs/.markdownlintignore`

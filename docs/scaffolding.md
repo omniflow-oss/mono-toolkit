@@ -20,5 +20,6 @@ Creates:
 - `domain/` model stub
 - `infrastructure/` adapter stub
 - `tests/` test stub
+- `README.md` feature summary
 
 All paths are validated to remain under the repo root.

@@ -11,5 +11,6 @@ npx mono-toolkit docs:serve
 Config:
 
 - `docs.root` points to the target repo docs folder.
+- `docs:lint` runs `pnpm -C <repoRoot> docs:lint` to use markdownlint config.
 
 Commands run inside the tools container via `pnpm -C <docsRoot> <command>`.

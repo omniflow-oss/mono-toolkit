@@ -18,6 +18,7 @@ This creates:
 - `config/tools/**` tool configs
 - `.cache/mono-toolkit/**` cache layout
 - `infra/tools.compose.yaml` and `infra/Dockerfile.tools`
+- `contracts/` and `docs/` roots
 - a `biome.jsonc` router
 
 ## Run common pipelines

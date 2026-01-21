@@ -8,6 +8,7 @@ Deterministic Docker-first monorepo tooling for Quarkus services, Nuxt apps, sha
 - Runs tasks via Docker to keep builds reproducible.
 - Defaults to `--changed` execution for faster CI.
 - Provides contracts and docs pipelines with reports under `.cache/mono-toolkit`.
+- Generates OpenAPI TypeScript clients and Nuxt API plugins.
 - Scaffolds vertical-slice features with consistent structure.
 
 ## Quick start
