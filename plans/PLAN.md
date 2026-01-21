@@ -282,7 +282,7 @@ All non-host commands run via:
   * `git`, `curl`, `bash`
   * Node (pinned)
   * pnpm (via corepack)
-  * CLI tools (spectral, openapi-typescript, oasdiff, swagger-cli, biome)
+  * CLI tools (spectral, openapi-typescript, oasdiff, @redocly/cli, biome)
   * Maven (if not included) and system deps for native builds.
 
 ### 11.3 Compose mounts

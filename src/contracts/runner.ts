@@ -16,6 +16,7 @@ import {
 	ensureDir,
 	listDirectories,
 	pathExists,
+	readJsonFile,
 } from "../core/fs";
 import { runInDocker } from "../docker/runner";
 
@@ -276,16 +277,21 @@ const normalizeSpec = async (
 		"normalize.json",
 	);
 	const normalizeArgs = [
-		"swagger-cli",
+		"redocly",
 		"bundle",
 		input,
-		"--type",
-		"yaml",
-		"--outfile",
+		"--output",
 		output,
+		"--ext",
+		"yaml",
 	];
 	if (await pathExists(normalizeConfig)) {
-		normalizeArgs.push("--config", normalizeConfig);
+		const normalizeOptions = await readJsonFile<{
+			dereference?: boolean;
+		}>(normalizeConfig);
+		if (normalizeOptions.dereference) {
+			normalizeArgs.push("--dereferenced");
+		}
 	}
 	const result = await runInDocker({
 		repoRoot,
