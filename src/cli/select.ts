@@ -1,5 +1,5 @@
-import type { ToolkitConfig, ScopeRecord } from "../core/config/types";
 import { getChangedScopes } from "../changed/changed";
+import type { ScopeRecord, ToolkitConfig } from "../core/config/types";
 
 export interface SelectionOptions {
 	scope?: string;

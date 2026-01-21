@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { asError, ExitCode, ToolkitError } from "../src/core/errors";
+import { ExitCode, ToolkitError, asError } from "../src/core/errors";
 
 describe("ToolkitError", () => {
 	it("stores error code and details", () => {

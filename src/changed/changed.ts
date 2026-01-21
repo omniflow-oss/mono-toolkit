@@ -1,7 +1,7 @@
 import path from "node:path";
-import { execCommand } from "../core/exec";
-import { ExitCode, ToolkitError } from "../core/errors";
 import type { ChangedConfig, ScopeRecord } from "../core/config/types";
+import { ExitCode, ToolkitError } from "../core/errors";
+import { execCommand } from "../core/exec";
 import { resolveBaseRef } from "./base";
 
 const normalizePath = (filePath: string): string =>
@@ -64,7 +64,7 @@ export const mapChangedFilesToScopes = (
 		}
 
 		const match = scopes.find((scope) =>
-			file.startsWith(normalizePath(scope.path) + "/"),
+			file.startsWith(`${normalizePath(scope.path)}/`),
 		);
 		if (match) {
 			result.add(match.id);

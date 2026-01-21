@@ -1,8 +1,6 @@
-import path from "node:path";
 import { promises as fs } from "node:fs";
-import { runInDocker } from "../docker/runner";
-import { execCommand } from "../core/exec";
-import { ExitCode, ToolkitError } from "../core/errors";
+import path from "node:path";
+import { runContractsTask } from "../contracts/runner";
 import type {
 	DockerConfig,
 	ProfileConfig,
@@ -11,7 +9,9 @@ import type {
 	TasksConfig,
 	ToolkitConfig,
 } from "../core/config/types";
-import { runContractsTask } from "../contracts/runner";
+import { ExitCode, ToolkitError } from "../core/errors";
+import { execCommand } from "../core/exec";
+import { runInDocker } from "../docker/runner";
 import { runDocsTask } from "../docs/runner";
 
 export interface TaskRunResult {

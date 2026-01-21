@@ -1,5 +1,5 @@
-import { execCommand } from "../core/exec";
 import type { DockerConfig } from "../core/config/types";
+import { execCommand } from "../core/exec";
 import { buildComposeArgs } from "./compose";
 
 export const runInDocker = async (options: {

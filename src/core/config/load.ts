@@ -1,14 +1,14 @@
 import path from "node:path";
 import { pathExists, readJsonFile } from "../fs";
 import { getPackageRoot } from "../package-root";
-import { mergeObjects, type MergePolicy } from "./merge";
-import { validateConfig } from "./validate";
+import { type MergePolicy, mergeObjects } from "./merge";
 import {
-	configFiles,
 	type ConfigMap,
 	type ConfigName,
 	type ToolkitConfig,
+	configFiles,
 } from "./types";
+import { validateConfig } from "./validate";
 
 const readMergePolicy = async (repoRoot: string): Promise<MergePolicy> => {
 	const policyPath = path.join(repoRoot, "config", "merge-policy.json");

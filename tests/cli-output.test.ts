@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { ExitCode, ToolkitError } from "../src/core/errors";
 import {
 	setExitCode,
 	writeError,
 	writeJson,
 	writeText,
 } from "../src/cli/output";
+import { ExitCode, ToolkitError } from "../src/core/errors";
 
 const createContext = () => {
 	const stdout: string[] = [];

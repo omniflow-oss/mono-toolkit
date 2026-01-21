@@ -20,7 +20,7 @@ export const writeJsonFile = async (
 	filePath: string,
 	value: unknown,
 ): Promise<void> => {
-	const content = JSON.stringify(value, null, 2) + "\n";
+	const content = `${JSON.stringify(value, null, 2)}\n`;
 	await fs.writeFile(filePath, content, "utf8");
 };
 

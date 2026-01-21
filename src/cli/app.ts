@@ -1,21 +1,21 @@
 import { buildApplication, buildRouteMap } from "@stricli/core";
-import { initCommand } from "./commands/init";
+import { getPackageVersion } from "../core/version";
+import { deleteCommand } from "./commands/delete";
 import { doctorCommand } from "./commands/doctor";
 import {
-	listScopesCommand,
-	listPortsCommand,
-	listChangedCommand,
-} from "./commands/list";
-import { createPipelineCommand } from "./commands/pipeline";
-import {
-	infraUpCommand,
 	infraDownCommand,
-	infraPsCommand,
 	infraLogsCommand,
+	infraPsCommand,
+	infraUpCommand,
 } from "./commands/infra";
+import { initCommand } from "./commands/init";
+import {
+	listChangedCommand,
+	listPortsCommand,
+	listScopesCommand,
+} from "./commands/list";
 import { newCommand } from "./commands/new";
-import { deleteCommand } from "./commands/delete";
-import { getPackageVersion } from "../core/version";
+import { createPipelineCommand } from "./commands/pipeline";
 
 export const createApp = async () => {
 	const routes = buildRouteMap({

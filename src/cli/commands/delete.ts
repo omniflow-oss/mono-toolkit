@@ -1,11 +1,11 @@
-import path from "node:path";
 import { promises as fs } from "node:fs";
+import path from "node:path";
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
-import { loadRepoContext } from "./shared";
+import { assertPathWithinRoot } from "../../core/fs";
 import { sanitizeName } from "../../scaffold/sanitize";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
-import { assertPathWithinRoot } from "../../core/fs";
+import { loadRepoContext } from "./shared";
 
 const typeOptions = ["service", "lib", "app", "package", "feature"] as const;
 type DeleteType = (typeof typeOptions)[number];

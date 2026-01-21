@@ -1,13 +1,13 @@
-import { describe, expect, it, vi } from "vitest";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { describe, expect, it, vi } from "vitest";
 import { runContractsTask } from "../src/contracts/runner";
 import type {
 	ContractsConfig,
+	DockerConfig,
 	GitConfig,
 	ScopeRecord,
-	DockerConfig,
 } from "../src/core/config/types";
 
 vi.mock("../src/docker/runner", () => ({
@@ -22,9 +22,9 @@ vi.mock("../src/changed/base", () => ({
 	resolveBaseRef: vi.fn(),
 }));
 
-import { runInDocker } from "../src/docker/runner";
-import { execCommand } from "../src/core/exec";
 import { resolveBaseRef } from "../src/changed/base";
+import { execCommand } from "../src/core/exec";
+import { runInDocker } from "../src/docker/runner";
 
 const docker: DockerConfig = {
 	composeFile: "infra/tools.compose.yaml",

@@ -9,13 +9,13 @@ vi.mock("../src/core/exec", () => ({
 }));
 
 import { resolveBaseRef } from "../src/changed/base";
-import { execCommand } from "../src/core/exec";
-import { ExitCode, ToolkitError } from "../src/core/errors";
 import {
 	getChangedFiles,
 	mapChangedFilesToScopes,
 } from "../src/changed/changed";
 import type { ChangedConfig, ScopeRecord } from "../src/core/config/types";
+import { ExitCode, ToolkitError } from "../src/core/errors";
+import { execCommand } from "../src/core/exec";
 
 describe("getChangedFiles", () => {
 	it("normalizes changed file paths", async () => {

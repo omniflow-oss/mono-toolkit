@@ -16,13 +16,13 @@ vi.mock("../src/reports/cache", () => ({
 	ensureCacheLayout: vi.fn(),
 }));
 
-import { infraUpCommand } from "../src/cli/commands/infra";
 import { doctorCommand } from "../src/cli/commands/doctor";
-import { execCommand } from "../src/core/exec";
+import { infraUpCommand } from "../src/cli/commands/infra";
 import { loadRepoContext } from "../src/cli/commands/shared";
+import type { ToolkitConfig } from "../src/core/config/types";
+import { execCommand } from "../src/core/exec";
 import { findRepoRootOrThrow } from "../src/core/root";
 import { ensureCacheLayout } from "../src/reports/cache";
-import type { ToolkitConfig } from "../src/core/config/types";
 
 const createContext = () => {
 	const stdout: string[] = [];

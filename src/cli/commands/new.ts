@@ -1,13 +1,13 @@
-import path from "node:path";
 import { promises as fs } from "node:fs";
+import path from "node:path";
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
-import { loadRepoContext } from "./shared";
+import { assertPathWithinRoot } from "../../core/fs";
 import { getPackageRoot } from "../../core/package-root";
 import { sanitizeName } from "../../scaffold/sanitize";
 import { renderTemplateDir } from "../../scaffold/template";
-import { assertPathWithinRoot } from "../../core/fs";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
+import { loadRepoContext } from "./shared";
 
 const typeOptions = ["service", "lib", "app", "package", "feature"] as const;
 type CreateType = (typeof typeOptions)[number];

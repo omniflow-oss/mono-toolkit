@@ -8,14 +8,14 @@ vi.mock("../src/changed/changed", () => ({
 	getChangedScopes: vi.fn(),
 }));
 
+import { getChangedScopes } from "../src/changed/changed";
 import {
-	listScopesCommand,
-	listPortsCommand,
 	listChangedCommand,
+	listPortsCommand,
+	listScopesCommand,
 } from "../src/cli/commands/list";
 import { loadRepoContext } from "../src/cli/commands/shared";
-import { getChangedScopes } from "../src/changed/changed";
-import type { ToolkitConfig, ScopeRecord } from "../src/core/config/types";
+import type { ScopeRecord, ToolkitConfig } from "../src/core/config/types";
 
 const createContext = () => {
 	const stdout: string[] = [];

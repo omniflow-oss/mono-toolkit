@@ -1,5 +1,5 @@
-import { ExitCode, ToolkitError } from "../core/errors";
 import type { PoliciesConfig } from "../core/config/types";
+import { ExitCode, ToolkitError } from "../core/errors";
 
 export const sanitizeName = (
 	name: string,

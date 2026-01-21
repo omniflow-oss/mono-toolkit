@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { runHostCommand } from "../src/tasks/execute";
 import { ExitCode, ToolkitError } from "../src/core/errors";
+import { runHostCommand } from "../src/tasks/execute";
 
 describe("runHostCommand", () => {
 	it("runs a host command and captures output", async () => {

@@ -1,11 +1,11 @@
-import { describe, expect, it, vi } from "vitest";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { executePipeline } from "../src/tasks/execute";
-import { ExitCode, ToolkitError } from "../src/core/errors";
+import { describe, expect, it, vi } from "vitest";
 import type { ScopeRecord, TasksConfig } from "../src/core/config/types";
+import { ExitCode, ToolkitError } from "../src/core/errors";
 import { runInDocker } from "../src/docker/runner";
+import { executePipeline } from "../src/tasks/execute";
 
 vi.mock("../src/docker/runner", () => ({
 	runInDocker: vi.fn(),

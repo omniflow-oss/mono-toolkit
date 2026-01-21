@@ -1,9 +1,9 @@
 import path from "node:path";
-import Ajv2020, { type ValidateFunction } from "ajv/dist/2020";
 import type { AnySchema } from "ajv";
 import addFormats from "ajv-formats";
-import { readJsonFile } from "../fs";
+import Ajv2020, { type ValidateFunction } from "ajv/dist/2020";
 import { ExitCode, ToolkitError } from "../errors";
+import { readJsonFile } from "../fs";
 import { getPackageRoot } from "../package-root";
 
 const ajv = new Ajv2020({ allErrors: true, allowUnionTypes: true });

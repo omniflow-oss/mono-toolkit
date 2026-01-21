@@ -6,7 +6,7 @@ vi.mock("../src/changed/changed", () => ({
 
 import { getChangedScopes } from "../src/changed/changed";
 import { selectScopes } from "../src/cli/select";
-import type { ToolkitConfig, ScopeRecord } from "../src/core/config/types";
+import type { ScopeRecord, ToolkitConfig } from "../src/core/config/types";
 
 const baseConfig: ToolkitConfig = {
 	paths: {

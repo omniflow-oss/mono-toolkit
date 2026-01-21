@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { buildComposeArgs } from "../src/docker/compose";
-import { runInDocker } from "../src/docker/runner";
 import type { DockerConfig } from "../src/core/config/types";
 import * as execModule from "../src/core/exec";
+import { buildComposeArgs } from "../src/docker/compose";
+import { runInDocker } from "../src/docker/runner";
 
 describe("buildComposeArgs", () => {
 	it("builds docker compose run args", () => {

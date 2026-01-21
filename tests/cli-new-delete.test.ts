@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { newCommand } from "../src/cli/commands/new";
+import { describe, expect, it } from "vitest";
 import { deleteCommand } from "../src/cli/commands/delete";
+import { newCommand } from "../src/cli/commands/new";
 
 const createContext = (cwd: string) => {
 	const stdout: string[] = [];

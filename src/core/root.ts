@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { readJsonFile } from "./fs";
 import { ExitCode, ToolkitError } from "./errors";
+import { readJsonFile } from "./fs";
 
 const hasPnpmWorkspace = async (dirPath: string): Promise<boolean> => {
 	try {

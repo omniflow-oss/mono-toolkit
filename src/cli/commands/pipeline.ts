@@ -1,12 +1,12 @@
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
-import { loadRepoContext } from "./shared";
-import { selectionFlags, runtimeFlags } from "../flags";
-import { selectScopes } from "../select";
-import { executePipeline } from "../../tasks/execute";
-import { writeSummaryReport } from "../../reports/write";
 import { ensureCacheLayout } from "../../reports/cache";
+import { writeSummaryReport } from "../../reports/write";
+import { executePipeline } from "../../tasks/execute";
+import { runtimeFlags, selectionFlags } from "../flags";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
+import { selectScopes } from "../select";
+import { loadRepoContext } from "./shared";
 
 export const createPipelineCommand = (pipeline: string, brief: string) =>
 	buildCommand<

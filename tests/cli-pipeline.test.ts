@@ -23,9 +23,9 @@ vi.mock("../src/reports/cache", () => ({
 import { createPipelineCommand } from "../src/cli/commands/pipeline";
 import { loadRepoContext } from "../src/cli/commands/shared";
 import { selectScopes } from "../src/cli/select";
-import { executePipeline } from "../src/tasks/execute";
+import type { ScopeRecord, ToolkitConfig } from "../src/core/config/types";
 import { writeSummaryReport } from "../src/reports/write";
-import type { ToolkitConfig, ScopeRecord } from "../src/core/config/types";
+import { executePipeline } from "../src/tasks/execute";
 
 const createContext = () => {
 	const stdout: string[] = [];

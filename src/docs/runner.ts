@@ -1,8 +1,8 @@
 import path from "node:path";
-import { assertPathWithinRoot } from "../core/fs";
+import type { DockerConfig, DocsConfig } from "../core/config/types";
 import { ExitCode, ToolkitError } from "../core/errors";
+import { assertPathWithinRoot } from "../core/fs";
 import { runInDocker } from "../docker/runner";
-import type { DocsConfig, DockerConfig } from "../core/config/types";
 
 const taskMap: Record<string, string> = {
 	"docs:lint": "lint",

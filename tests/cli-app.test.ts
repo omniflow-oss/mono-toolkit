@@ -14,8 +14,8 @@ vi.mock("../src/core/version", () => ({
 }));
 
 import { buildApplication, buildRouteMap } from "@stricli/core";
-import { getPackageVersion } from "../src/core/version";
 import { createApp } from "../src/cli/app";
+import { getPackageVersion } from "../src/core/version";
 
 describe("createApp", () => {
 	it("builds the application with routes and version", async () => {

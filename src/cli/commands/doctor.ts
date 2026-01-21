@@ -1,7 +1,7 @@
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
-import { execCommand } from "../../core/exec";
 import { ExitCode, ToolkitError } from "../../core/errors";
+import { execCommand } from "../../core/exec";
 import { findRepoRootOrThrow } from "../../core/root";
 import { ensureCacheLayout } from "../../reports/cache";
 import { setExitCode, writeError, writeJson, writeText } from "../output";

@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { describe, expect, it } from "vitest";
 import { initCommand } from "../src/cli/commands/init";
 
 const createContext = (cwd: string) => {

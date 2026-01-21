@@ -1,5 +1,5 @@
-import { findRepoRootOrThrow } from "../../core/root";
 import { loadConfig } from "../../core/config/load";
+import { findRepoRootOrThrow } from "../../core/root";
 import { discoverScopes } from "../../scopes/discover";
 
 export const loadRepoContext = async (context: { cwd?: string }) => {

@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { discoverScopes } from "../src/scopes/discover";
+import { describe, expect, it } from "vitest";
 import type { PathsConfig, ScopesConfig } from "../src/core/config/types";
+import { discoverScopes } from "../src/scopes/discover";
 
 describe("discoverScopes", () => {
 	it("discovers scopes and applies overrides", async () => {

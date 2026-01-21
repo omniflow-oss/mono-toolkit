@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
+import type { DockerConfig, DocsConfig } from "../src/core/config/types";
 import { runDocsTask } from "../src/docs/runner";
-import type { DocsConfig, DockerConfig } from "../src/core/config/types";
 
 vi.mock("../src/docker/runner", () => ({
 	runInDocker: vi.fn(),

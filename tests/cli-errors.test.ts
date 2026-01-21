@@ -21,11 +21,11 @@ import { doctorCommand } from "../src/cli/commands/doctor";
 import { infraDownCommand } from "../src/cli/commands/infra";
 import { newCommand } from "../src/cli/commands/new";
 import { loadRepoContext } from "../src/cli/commands/shared";
+import type { ToolkitConfig } from "../src/core/config/types";
+import { ExitCode } from "../src/core/errors";
 import { execCommand } from "../src/core/exec";
 import { findRepoRootOrThrow } from "../src/core/root";
 import { ensureCacheLayout } from "../src/reports/cache";
-import { ExitCode } from "../src/core/errors";
-import type { ToolkitConfig } from "../src/core/config/types";
 
 const createContext = () => {
 	const stdout: string[] = [];

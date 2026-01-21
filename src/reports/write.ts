@@ -19,6 +19,6 @@ export const writeSummaryReport = async (
 	repoRoot: string,
 	summary: ReportSummary,
 ): Promise<void> => {
-	const content = JSON.stringify(summary, null, 2) + "\n";
+	const content = `${JSON.stringify(summary, null, 2)}\n`;
 	await writeReportFile(repoRoot, "reports/summary.json", content);
 };

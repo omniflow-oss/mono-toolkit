@@ -1,5 +1,5 @@
-import { execCommand } from "../core/exec";
 import { ExitCode, ToolkitError } from "../core/errors";
+import { execCommand } from "../core/exec";
 
 const envBaseRefs = [
 	"GITHUB_BASE_REF",

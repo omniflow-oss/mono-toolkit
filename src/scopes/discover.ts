@@ -1,10 +1,10 @@
 import path from "node:path";
-import { listDirectories, pathExists } from "../core/fs";
 import type {
 	PathsConfig,
 	ScopeRecord,
 	ScopesConfig,
 } from "../core/config/types";
+import { listDirectories, pathExists } from "../core/fs";
 
 const scopeRoots = (paths: PathsConfig) =>
 	[

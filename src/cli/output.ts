@@ -6,11 +6,11 @@ export interface CliContext extends CommandContext {
 }
 
 export const writeJson = (context: CommandContext, payload: unknown): void => {
-	context.process.stdout.write(JSON.stringify(payload) + "\n");
+	context.process.stdout.write(`${JSON.stringify(payload)}\n`);
 };
 
 export const writeText = (context: CommandContext, text: string): void => {
-	context.process.stdout.write(text + "\n");
+	context.process.stdout.write(`${text}\n`);
 };
 
 export const writeError = (

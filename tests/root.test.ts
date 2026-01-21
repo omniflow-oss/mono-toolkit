@@ -1,8 +1,8 @@
+import { promises as fs } from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { findRepoRoot } from "../src/core/root";
-import { promises as fs } from "node:fs";
-import path from "node:path";
-import os from "node:os";
 
 describe("findRepoRoot", () => {
 	it("finds root by private package.json", async () => {

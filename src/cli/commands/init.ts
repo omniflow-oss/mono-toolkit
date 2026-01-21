@@ -1,17 +1,17 @@
 import path from "node:path";
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
+import { configFiles } from "../../core/config/types";
 import {
-	ensureDir,
 	copyDirIfMissing,
 	copyFileIfMissing,
+	ensureDir,
 	pathExists,
 	writeJsonFile,
 } from "../../core/fs";
 import { getPackageRoot } from "../../core/package-root";
 import { ensureCacheLayout } from "../../reports/cache";
 import { writeJson, writeText } from "../output";
-import { configFiles } from "../../core/config/types";
 
 export const initCommand = buildCommand({
 	parameters: {

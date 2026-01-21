@@ -4,8 +4,8 @@ vi.mock("../src/core/fs", () => ({
 	readJsonFile: vi.fn(),
 }));
 
-import { getPackageVersion } from "../src/core/version";
 import { readJsonFile } from "../src/core/fs";
+import { getPackageVersion } from "../src/core/version";
 
 describe("getPackageVersion", () => {
 	it("returns version from package.json", async () => {

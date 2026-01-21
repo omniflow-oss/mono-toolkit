@@ -1,9 +1,9 @@
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
-import { loadRepoContext } from "./shared";
 import { getChangedScopes } from "../../changed/changed";
-import { selectionFlags, runtimeFlags } from "../flags";
+import { runtimeFlags, selectionFlags } from "../flags";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
+import { loadRepoContext } from "./shared";
 
 export const listScopesCommand = buildCommand({
 	parameters: {

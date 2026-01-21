@@ -1,11 +1,11 @@
 import path from "node:path";
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
+import { ExitCode, ToolkitError } from "../../core/errors";
 import { execCommand } from "../../core/exec";
 import { assertPathWithinRoot } from "../../core/fs";
-import { ExitCode, ToolkitError } from "../../core/errors";
-import { loadRepoContext } from "./shared";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
+import { loadRepoContext } from "./shared";
 
 type InfraFlags = { json: boolean };
 
