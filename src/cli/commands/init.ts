@@ -1,7 +1,7 @@
+import { spawn } from "node:child_process";
 import path from "node:path";
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
-import { spawn } from "node:child_process";
 import { configFiles } from "../../core/config/types";
 import { ExitCode, ToolkitError } from "../../core/errors";
 import { execCommand } from "../../core/exec";
@@ -129,11 +129,21 @@ export const initCommand = buildCommand<{ json: boolean }, [], CommandContext>({
 					cwd: repoRoot,
 				});
 				if (buildResult.exitCode !== 0) {
-					throw new ToolkitError(
-						"Failed to build tools image",
-						ExitCode.TaskFailed,
-						{ stderr: buildResult.stderr },
-					);
+					if (process.env.MONO_TOOLKIT_INIT_STRICT_BUILD === "true") {
+						throw new ToolkitError(
+							"Failed to build tools image",
+							ExitCode.TaskFailed,
+							{ stderr: buildResult.stderr },
+						);
+					}
+					if (flags.json) {
+						writeJson(context, {
+							status: "warning",
+							message: "Failed to build tools image",
+						});
+					} else {
+						writeText(context, "Failed to build tools image");
+					}
 				}
 			}
 		}
