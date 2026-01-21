@@ -99,6 +99,18 @@ const runTask = async (options: {
 }): Promise<TaskRunResult> => {
 	const start = Date.now();
 	if (options.taskId.startsWith("contracts:")) {
+		if (options.dryRun) {
+			return {
+				scopeId: options.scope.id,
+				taskId: options.taskId,
+				exitCode: 0,
+				stdout: options.taskId,
+				stderr: "",
+				command: [options.taskId],
+				durationMs: 0,
+				cached: false,
+			};
+		}
 		const result = await runContractsTask({
 			repoRoot: options.repoRoot,
 			docker: options.docker,
@@ -121,6 +133,18 @@ const runTask = async (options: {
 	}
 
 	if (options.taskId.startsWith("docs:")) {
+		if (options.dryRun) {
+			return {
+				scopeId: options.scope.id,
+				taskId: options.taskId,
+				exitCode: 0,
+				stdout: options.taskId,
+				stderr: "",
+				command: [options.taskId],
+				durationMs: 0,
+				cached: false,
+			};
+		}
 		const result = await runDocsTask({
 			repoRoot: options.repoRoot,
 			docker: options.docker,

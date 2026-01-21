@@ -26,6 +26,7 @@
 		"docs:lint": "markdownlint-cli2 'docs/**/*.md'",
 		"docs:dev": "vitepress dev docs",
 		"docs:build": "vitepress build docs",
+		"smoke:test": "bash scripts/smoke-test.sh",
 		"typecheck": "tsc -p tsconfig.json --noEmit",
 		"lint": "biome check ."
 	},

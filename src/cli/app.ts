@@ -49,6 +49,10 @@ export const createApp = async () => {
 				"contracts:build",
 				"Build OpenAPI artifacts",
 			),
+			"contracts:client": createPipelineCommand(
+				"contracts:client",
+				"Generate OpenAPI client",
+			),
 			"docs:lint": createPipelineCommand("docs:lint", "Lint docs"),
 			"docs:build": createPipelineCommand("docs:build", "Build docs"),
 			"docs:serve": createPipelineCommand("docs:serve", "Serve docs"),
