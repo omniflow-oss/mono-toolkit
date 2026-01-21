@@ -6,7 +6,11 @@ import { findRepoRootOrThrow } from "../../core/root";
 import { ensureCacheLayout } from "../../reports/cache";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
 
-export const doctorCommand = buildCommand({
+export const doctorCommand = buildCommand<
+	{ fix: boolean; json: boolean },
+	[],
+	CommandContext
+>({
 	parameters: {
 		flags: {
 			fix: { kind: "boolean", brief: "Attempt to fix issues", default: false },
