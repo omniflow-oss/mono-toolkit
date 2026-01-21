@@ -24,9 +24,13 @@ export const runDocsTask = async (options: {
 	}
 	const docsRoot = path.join(options.repoRoot, options.docs.root);
 	assertPathWithinRoot(options.repoRoot, docsRoot, "docs root");
+	const commandArgs =
+		options.taskId === "docs:lint"
+			? ["pnpm", "-C", options.repoRoot, "docs:lint"]
+			: ["pnpm", "-C", docsRoot, command];
 	return runInDocker({
 		repoRoot: options.repoRoot,
 		docker: options.docker,
-		args: ["pnpm", "-C", docsRoot, command],
+		args: commandArgs,
 	});
 };

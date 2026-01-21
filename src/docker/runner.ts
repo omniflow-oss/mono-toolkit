@@ -8,7 +8,7 @@ export const runInDocker = async (options: {
 	args: string[];
 	env?: NodeJS.ProcessEnv;
 }): Promise<{ exitCode: number; stdout: string; stderr: string }> => {
-	const { command, args } = buildComposeArgs(
+	const { command, args } = await buildComposeArgs(
 		options.repoRoot,
 		options.docker,
 		options.args,

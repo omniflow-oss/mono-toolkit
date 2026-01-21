@@ -48,6 +48,7 @@ const resolveContractPaths = (
 		designNorm: path.join(cacheDir, "design.norm.yaml"),
 		runtimeNorm: path.join(cacheDir, "runtime.norm.yaml"),
 		breakingReport: path.join(reportDir, "breaking.json"),
+		clientOutput: path.join(reportDir, "client.ts"),
 		baseSpec: path.join(cacheDir, "base.yaml"),
 	};
 };
@@ -66,7 +67,34 @@ const ensureContractPaths = async (
 			path: paths.designSpec,
 		});
 	}
+	if (
+		contracts.allowlist.length > 0 &&
+		!contracts.allowlist.includes(paths.serviceName)
+	) {
+		throw new ToolkitError(
+			"Service is not in contracts allowlist",
+			ExitCode.InvalidConfig,
+			{ service: paths.serviceName },
+		);
+	}
 	return paths;
+};
+
+const ensureRuntimePath = (runtimePath: string): void => {
+	if (!runtimePath.startsWith("/")) {
+		throw new ToolkitError(
+			"contracts.runtimePath must start with '/'",
+			ExitCode.InvalidConfig,
+			{ runtimePath },
+		);
+	}
+	if (runtimePath.includes("://") || runtimePath.includes("..")) {
+		throw new ToolkitError(
+			"contracts.runtimePath must be a relative HTTP path",
+			ExitCode.InvalidConfig,
+			{ runtimePath },
+		);
+	}
 };
 
 const normalizeSpec = async (
@@ -77,18 +105,29 @@ const normalizeSpec = async (
 ): Promise<void> => {
 	assertPathWithinRoot(repoRoot, input, "contracts spec");
 	assertPathWithinRoot(repoRoot, output, "contracts output");
+	const normalizeConfig = path.join(
+		repoRoot,
+		"config",
+		"tools",
+		"openapi",
+		"normalize.json",
+	);
+	const normalizeArgs = [
+		"swagger-cli",
+		"bundle",
+		input,
+		"--type",
+		"yaml",
+		"--outfile",
+		output,
+	];
+	if (await pathExists(normalizeConfig)) {
+		normalizeArgs.push("--config", normalizeConfig);
+	}
 	const result = await runInDocker({
 		repoRoot,
 		docker,
-		args: [
-			"swagger-cli",
-			"bundle",
-			input,
-			"--type",
-			"yaml",
-			"--outfile",
-			output,
-		],
+		args: normalizeArgs,
 	});
 	if (result.exitCode !== 0) {
 		throw new ToolkitError(
@@ -179,6 +218,7 @@ export const runContractsTask = async (options: {
 					},
 				);
 			}
+			ensureRuntimePath(options.contracts.runtimePath);
 			const runtimeUrl = `http://localhost:${options.scope.port}${options.contracts.runtimePath}`;
 			await fetchRuntimeSpec(
 				options.repoRoot,
@@ -198,10 +238,21 @@ export const runContractsTask = async (options: {
 				paths.runtimeSpec,
 				paths.runtimeNorm,
 			);
+			const diffConfig = path.join(
+				options.repoRoot,
+				"config",
+				"tools",
+				"openapi",
+				"oasdiff.conf.yaml",
+			);
+			const diffArgs = ["oasdiff", "diff", paths.designNorm, paths.runtimeNorm];
+			if (await pathExists(diffConfig)) {
+				diffArgs.push("--config", diffConfig);
+			}
 			const diff = await runInDocker({
 				repoRoot: options.repoRoot,
 				docker: options.docker,
-				args: ["oasdiff", "diff", paths.designNorm, paths.runtimeNorm],
+				args: diffArgs,
 			});
 			return diff;
 		}
@@ -242,21 +293,52 @@ export const runContractsTask = async (options: {
 				paths.baseSpec,
 				paths.runtimeNorm,
 			);
+			const diffConfig = path.join(
+				options.repoRoot,
+				"config",
+				"tools",
+				"openapi",
+				"oasdiff.conf.yaml",
+			);
+			const diffArgs = [
+				"oasdiff",
+				"diff",
+				"-f",
+				"json",
+				"-o",
+				paths.breakingReport,
+				paths.runtimeNorm,
+				paths.designNorm,
+			];
+			if (await pathExists(diffConfig)) {
+				diffArgs.push("--config", diffConfig);
+			}
 			const diff = await runInDocker({
 				repoRoot: options.repoRoot,
 				docker: options.docker,
-				args: [
-					"oasdiff",
-					"diff",
-					"-f",
-					"json",
-					"-o",
-					paths.breakingReport,
-					paths.runtimeNorm,
-					paths.designNorm,
-				],
+				args: diffArgs,
 			});
 			return diff;
+		}
+		case "contracts:client": {
+			await normalizeSpec(
+				options.repoRoot,
+				options.docker,
+				paths.designSpec,
+				paths.designNorm,
+			);
+			const result = await runInDocker({
+				repoRoot: options.repoRoot,
+				docker: options.docker,
+				args: [
+					"npx",
+					"openapi-typescript",
+					paths.designNorm,
+					"-o",
+					paths.clientOutput,
+				],
+			});
+			return result;
 		}
 		default:
 			throw new ToolkitError(

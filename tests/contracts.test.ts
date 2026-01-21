@@ -133,4 +133,47 @@ describe("runContractsTask", () => {
 
 		expect(result.exitCode).toBe(0);
 	});
+
+	it("generates a client", async () => {
+		const repoRoot = await fs.mkdtemp(
+			path.join(os.tmpdir(), "mono-toolkit-client-"),
+		);
+		const specPath = path.join(repoRoot, "contracts", "alpha", "openapi.yaml");
+		await fs.mkdir(path.dirname(specPath), { recursive: true });
+		await fs.writeFile(specPath, "openapi: 3.0.0", "utf8");
+		vi.mocked(runInDocker)
+			.mockResolvedValueOnce({ exitCode: 0, stdout: "", stderr: "" })
+			.mockResolvedValueOnce({ exitCode: 0, stdout: "client", stderr: "" });
+
+		const result = await runContractsTask({
+			repoRoot,
+			docker,
+			contracts,
+			git,
+			scope: serviceScope,
+			taskId: "contracts:client",
+		});
+
+		expect(result.exitCode).toBe(0);
+	});
+
+	it("rejects non-allowlisted services", async () => {
+		const repoRoot = await fs.mkdtemp(
+			path.join(os.tmpdir(), "mono-toolkit-allowlist-"),
+		);
+		const specPath = path.join(repoRoot, "contracts", "alpha", "openapi.yaml");
+		await fs.mkdir(path.dirname(specPath), { recursive: true });
+		await fs.writeFile(specPath, "openapi: 3.0.0", "utf8");
+
+		await expect(
+			runContractsTask({
+				repoRoot,
+				docker,
+				contracts: { ...contracts, allowlist: ["beta"] },
+				git,
+				scope: serviceScope,
+				taskId: "contracts:lint",
+			}),
+		).rejects.toThrow();
+	});
 });

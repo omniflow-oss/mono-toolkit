@@ -7,6 +7,46 @@ export interface ExecResult {
 	stderr: string;
 }
 
+const redactValue = (text: string, value: string): string => {
+	if (!value || value.length < 4) {
+		return text;
+	}
+	const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	return text.replace(new RegExp(escaped, "g"), "[REDACTED]");
+};
+
+const redactOutput = (
+	text: string,
+	options: { env?: NodeJS.ProcessEnv } = {},
+): string => {
+	let resultText = text;
+	const secrets = new Set<string>();
+	const envSources = [process.env, options.env].filter(
+		(env): env is NodeJS.ProcessEnv => Boolean(env),
+	);
+	for (const env of envSources) {
+		for (const [key, value] of Object.entries(env)) {
+			if (!value) {
+				continue;
+			}
+			if (/(token|secret|password|api[_-]?key|private|auth)/i.test(key)) {
+				secrets.add(value);
+			}
+		}
+	}
+	for (const pattern of ["ghp_", "github_pat_", "AKIA", "ASIA"]) {
+		if (resultText.includes(pattern)) {
+			const regex = new RegExp(`${pattern}[0-9A-Za-z_\-]{8,}`, "g");
+			resultText = resultText.replace(regex, "[REDACTED]");
+		}
+	}
+	let redacted = resultText;
+	for (const value of secrets) {
+		redacted = redactValue(redacted, value);
+	}
+	return redacted;
+};
+
 export const execCommand = (
 	command: string,
 	args: string[],
@@ -34,7 +74,11 @@ export const execCommand = (
 		});
 
 		child.on("close", (code) => {
-			resolve({ exitCode: code ?? 0, stdout, stderr });
+			resolve({
+				exitCode: code ?? 0,
+				stdout: redactOutput(stdout, options),
+				stderr: redactOutput(stderr, options),
+			});
 		});
 	});
 };

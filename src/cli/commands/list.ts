@@ -5,7 +5,9 @@ import { runtimeFlags, selectionFlags } from "../flags";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
 import { loadRepoContext } from "./shared";
 
-export const listScopesCommand = buildCommand({
+type ListFlags = { json: boolean };
+
+export const listScopesCommand = buildCommand<ListFlags, [], CommandContext>({
 	parameters: {
 		flags: { json: { kind: "boolean", brief: "Output JSON", default: false } },
 	},
@@ -13,12 +15,12 @@ export const listScopesCommand = buildCommand({
 	func: async function (flags) {
 		const context = this as CommandContext;
 		try {
-			const { scopes } = await loadRepoContext(context);
+			const { scopes } = await loadRepoContext(context as { cwd?: string });
 			if (flags.json) {
 				writeJson(context, { scopes });
 			} else {
 				for (const scope of scopes) {
-					writeText(context, `${scope.id} ${scope.path}`);
+					writeText(context, `${scope.id} ${scope.type} ${scope.path}`);
 				}
 			}
 		} catch (error) {
@@ -27,7 +29,7 @@ export const listScopesCommand = buildCommand({
 	},
 });
 
-export const listPortsCommand = buildCommand({
+export const listPortsCommand = buildCommand<ListFlags, [], CommandContext>({
 	parameters: {
 		flags: { json: { kind: "boolean", brief: "Output JSON", default: false } },
 	},
@@ -35,7 +37,7 @@ export const listPortsCommand = buildCommand({
 	func: async function (flags) {
 		const context = this as CommandContext;
 		try {
-			const { scopes } = await loadRepoContext(context);
+			const { scopes } = await loadRepoContext(context as { cwd?: string });
 			const ports = scopes.filter((scope) => scope.port);
 			if (flags.json) {
 				writeJson(context, { ports });
@@ -50,7 +52,25 @@ export const listPortsCommand = buildCommand({
 	},
 });
 
-export const listChangedCommand = buildCommand({
+type ListChangedFlags = {
+	json: boolean;
+	scope?: string;
+	tag?: string;
+	changed: boolean;
+	all: boolean;
+	since?: string;
+	base?: string;
+	jobs?: number;
+	dryRun: boolean;
+	ci: boolean;
+	verbose: boolean;
+};
+
+export const listChangedCommand = buildCommand<
+	ListChangedFlags,
+	[],
+	CommandContext
+>({
 	parameters: {
 		flags: {
 			...selectionFlags,
@@ -61,7 +81,9 @@ export const listChangedCommand = buildCommand({
 	func: async function (flags) {
 		const context = this as CommandContext;
 		try {
-			const { repoRoot, config, scopes } = await loadRepoContext(context);
+			const { repoRoot, config, scopes } = await loadRepoContext(
+				context as { cwd?: string },
+			);
 			const changedScopes = await getChangedScopes({
 				since: flags.since,
 				base: flags.base,

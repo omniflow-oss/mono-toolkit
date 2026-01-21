@@ -120,7 +120,7 @@ describe("list commands", () => {
 		await run.call(context, { json: false });
 
 		const lines = stdout.join("").trim().split("\n");
-		expect(lines).toContain("back:service:alpha back/services/alpha");
+		expect(lines).toContain("back:service:alpha service back/services/alpha");
 	});
 
 	it("lists ports in JSON", async () => {

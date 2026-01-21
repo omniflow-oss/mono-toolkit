@@ -16,6 +16,10 @@ vi.mock("../src/reports/cache", () => ({
 	ensureCacheLayout: vi.fn(),
 }));
 
+vi.mock("../src/docker/compose", () => ({
+	validateComposeFile: vi.fn(),
+}));
+
 import { deleteCommand } from "../src/cli/commands/delete";
 import { doctorCommand } from "../src/cli/commands/doctor";
 import { infraDownCommand } from "../src/cli/commands/infra";
@@ -25,6 +29,7 @@ import type { ToolkitConfig } from "../src/core/config/types";
 import { ExitCode } from "../src/core/errors";
 import { execCommand } from "../src/core/exec";
 import { findRepoRootOrThrow } from "../src/core/root";
+import { validateComposeFile } from "../src/docker/compose";
 import { ensureCacheLayout } from "../src/reports/cache";
 
 const createContext = () => {
@@ -129,6 +134,7 @@ describe("cli error paths", () => {
 			stdout: "down\n",
 			stderr: "err",
 		});
+		vi.mocked(validateComposeFile).mockResolvedValue();
 
 		const { context, stdout, stderr } = createContext();
 		const run = await loadCommandFn(infraDownCommand);

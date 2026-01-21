@@ -13,6 +13,13 @@ import { ExitCode, ToolkitError } from "../core/errors";
 import { execCommand } from "../core/exec";
 import { runInDocker } from "../docker/runner";
 import { runDocsTask } from "../docs/runner";
+import {
+	type TaskCache,
+	computeTaskInputsHash,
+	loadTaskCache,
+	resolveTaskOutputs,
+	saveTaskCache,
+} from "./cache";
 
 export interface TaskRunResult {
 	scopeId: string;
@@ -61,48 +68,22 @@ const buildCommandArgs = (
 	}
 };
 
-const resolveTaskPath = (
-	repoRoot: string,
-	scope: ScopeRecord,
-	value: string,
-): string => {
-	if (path.isAbsolute(value)) {
-		return value;
-	}
-	return path.join(repoRoot, scope.path, value);
+const getCacheEntry = (
+	cache: TaskCache,
+	scopeId: string,
+	taskId: string,
+): TaskCache["scopes"][string][string] | undefined => {
+	return cache.scopes[scopeId]?.[taskId];
 };
 
-const isTaskCached = async (options: {
-	repoRoot: string;
-	scope: ScopeRecord;
-	task: TaskDefinition;
-}): Promise<boolean> => {
-	if (
-		!options.task.cacheable ||
-		!options.task.outputs?.length ||
-		!options.task.inputs?.length
-	) {
-		return false;
+const ensureCacheScope = (
+	cache: TaskCache,
+	scopeId: string,
+): Record<string, TaskCache["scopes"][string][string]> => {
+	if (!cache.scopes[scopeId]) {
+		cache.scopes[scopeId] = {};
 	}
-	const resolvedOutputs = options.task.outputs.map((output) =>
-		resolveTaskPath(options.repoRoot, options.scope, output),
-	);
-	const resolvedInputs = options.task.inputs.map((input) =>
-		resolveTaskPath(options.repoRoot, options.scope, input),
-	);
-	try {
-		const outputStats = await Promise.all(
-			resolvedOutputs.map((output) => fs.stat(output)),
-		);
-		const inputStats = await Promise.all(
-			resolvedInputs.map((input) => fs.stat(input)),
-		);
-		const newestInput = Math.max(...inputStats.map((stat) => stat.mtimeMs));
-		const oldestOutput = Math.min(...outputStats.map((stat) => stat.mtimeMs));
-		return oldestOutput >= newestInput;
-	} catch {
-		return false;
-	}
+	return cache.scopes[scopeId];
 };
 
 const runTask = async (options: {
@@ -114,6 +95,7 @@ const runTask = async (options: {
 	profile: ProfileConfig;
 	dryRun: boolean;
 	config: ToolkitConfig;
+	cache: TaskCache;
 }): Promise<TaskRunResult> => {
 	const start = Date.now();
 	if (options.taskId.startsWith("contracts:")) {
@@ -170,23 +152,53 @@ const runTask = async (options: {
 		};
 	}
 
-	if (
-		await isTaskCached({
+	let inputInfo: { hash: string; inputs: string[] } | null = null;
+	let outputs: string[] = [];
+	if (options.task.cacheable) {
+		outputs = await resolveTaskOutputs({
 			repoRoot: options.repoRoot,
 			scope: options.scope,
 			task: options.task,
-		})
-	) {
-		return {
-			scopeId: options.scope.id,
-			taskId: options.taskId,
-			exitCode: 0,
-			stdout: "cached",
-			stderr: "",
-			command: args,
-			durationMs: 0,
-			cached: true,
-		};
+		});
+		inputInfo = await computeTaskInputsHash({
+			repoRoot: options.repoRoot,
+			scope: options.scope,
+			task: options.task,
+		});
+		if (!inputInfo.inputs.length || !outputs.length) {
+			inputInfo = null;
+			outputs = [];
+		} else {
+			const entry = getCacheEntry(
+				options.cache,
+				options.scope.id,
+				options.taskId,
+			);
+			if (entry?.inputHash && entry.inputHash === inputInfo.hash) {
+				const outputExists = outputs.length
+					? await Promise.all(
+							outputs.map((file) =>
+								fs
+									.stat(file)
+									.then(() => true)
+									.catch(() => false),
+							),
+						)
+					: [];
+				if (!outputs.length || outputExists.every(Boolean)) {
+					return {
+						scopeId: options.scope.id,
+						taskId: options.taskId,
+						exitCode: 0,
+						stdout: "cached",
+						stderr: "",
+						command: args,
+						durationMs: 0,
+						cached: true,
+					};
+				}
+			}
+		}
 	}
 
 	const result = await runInDocker({
@@ -195,6 +207,14 @@ const runTask = async (options: {
 		args,
 		env: options.task.env,
 	});
+
+	if (options.task.cacheable && inputInfo && result.exitCode === 0) {
+		const scopeCache = ensureCacheScope(options.cache, options.scope.id);
+		scopeCache[options.taskId] = {
+			inputHash: inputInfo.hash,
+			outputs,
+		};
+	}
 
 	return {
 		scopeId: options.scope.id,
@@ -216,6 +236,7 @@ const runScope = async (options: {
 	tasksConfig: TasksConfig;
 	dryRun: boolean;
 	config: ToolkitConfig;
+	cache: TaskCache;
 }): Promise<ScopeRunResult> => {
 	const profile = options.tasksConfig.profiles[options.scope.profile];
 	if (!profile) {
@@ -240,6 +261,7 @@ const runScope = async (options: {
 			profile,
 			dryRun: options.dryRun,
 			config: options.config,
+			cache: options.cache,
 		});
 		results.push(result);
 		if (result.exitCode !== 0) {
@@ -313,6 +335,7 @@ export const executePipeline = async (options: {
 	dryRun: boolean;
 	config: ToolkitConfig;
 }): Promise<ScopeRunResult[]> => {
+	const cache = await loadTaskCache(options.repoRoot);
 	const pipelineTasks = options.tasksConfig.pipelines[options.pipeline];
 	if (!pipelineTasks) {
 		throw new ToolkitError(
@@ -338,10 +361,13 @@ export const executePipeline = async (options: {
 				tasksConfig: options.tasksConfig,
 				dryRun: options.dryRun,
 				config: options.config,
+				cache,
 			});
 			results.push(scopeResult);
 		},
 	);
+
+	await saveTaskCache(options.repoRoot, cache);
 
 	const failed = results
 		.flatMap((scope) => scope.tasks)

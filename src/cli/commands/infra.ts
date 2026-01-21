@@ -4,6 +4,7 @@ import { buildCommand } from "@stricli/core";
 import { ExitCode, ToolkitError } from "../../core/errors";
 import { execCommand } from "../../core/exec";
 import { assertPathWithinRoot } from "../../core/fs";
+import { validateComposeFile } from "../../docker/compose";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
 import { loadRepoContext } from "./shared";
 
@@ -19,6 +20,7 @@ const runInfra = async (
 	);
 	const composeFile = path.join(repoRoot, config.docker.infraCompose);
 	assertPathWithinRoot(repoRoot, composeFile, "infra compose file");
+	await validateComposeFile({ repoRoot, composeFile });
 	const allowedCommands = new Set(["docker", "podman"]);
 	if (!allowedCommands.has(config.docker.command)) {
 		throw new ToolkitError(

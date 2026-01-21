@@ -68,8 +68,11 @@ const baseConfig: import("../src/core/config/types").ToolkitConfig = {
 
 describe("executePipeline", () => {
 	it("returns dry-run commands", async () => {
+		const repoRoot = await fs.mkdtemp(
+			path.join(os.tmpdir(), "mono-toolkit-dry-"),
+		);
 		const results = await executePipeline({
-			repoRoot: "/repo",
+			repoRoot,
 			docker: {
 				composeFile: "infra/tools.compose.yaml",
 				service: "tools",
@@ -162,10 +165,13 @@ describe("executePipeline", () => {
 			stdout: "",
 			stderr: "boom",
 		});
+		const repoRoot = await fs.mkdtemp(
+			path.join(os.tmpdir(), "mono-toolkit-fail-"),
+		);
 
 		await expect(
 			executePipeline({
-				repoRoot: "/repo",
+				repoRoot,
 				docker: {
 					composeFile: "infra/tools.compose.yaml",
 					service: "tools",
@@ -206,6 +212,29 @@ describe("executePipeline", () => {
 				},
 			},
 		};
+		vi.mocked(runInDocker).mockResolvedValue({
+			exitCode: 0,
+			stdout: "ok",
+			stderr: "",
+		});
+
+		await executePipeline({
+			repoRoot,
+			docker: baseConfig.docker,
+			pipeline: "build",
+			scopes,
+			tasksConfig,
+			dryRun: false,
+			config: { ...baseConfig, tasks: tasksConfig },
+		});
+		const cacheContent = await fs.readFile(
+			path.join(repoRoot, ".cache/mono-toolkit/cache/tasks.json"),
+			"utf8",
+		);
+		const cacheJson = JSON.parse(cacheContent) as {
+			scopes: Record<string, Record<string, { inputHash: string }>>;
+		};
+		expect(cacheJson.scopes["back:service:alpha"].cached).toBeDefined();
 
 		const results = await executePipeline({
 			repoRoot,
@@ -227,6 +256,9 @@ describe("executePipeline", () => {
 			stdout: "ok",
 			stderr: "",
 		});
+		const repoRoot = await fs.mkdtemp(
+			path.join(os.tmpdir(), "mono-toolkit-deps-"),
+		);
 
 		const tasksConfig: TasksConfig = {
 			jobs: 1,
@@ -239,7 +271,7 @@ describe("executePipeline", () => {
 		};
 
 		const results = await executePipeline({
-			repoRoot: "/repo",
+			repoRoot,
 			docker: baseConfig.docker,
 			pipeline: "build",
 			scopes,

@@ -1,7 +1,7 @@
 import type { CommandContext } from "@stricli/core";
 import { buildCommand } from "@stricli/core";
 import { ensureCacheLayout } from "../../reports/cache";
-import { writeSummaryReport } from "../../reports/write";
+import { writeScopeReport, writeSummaryReport } from "../../reports/write";
 import { executePipeline } from "../../tasks/execute";
 import { runtimeFlags, selectionFlags } from "../flags";
 import { setExitCode, writeError, writeJson, writeText } from "../output";
@@ -83,6 +83,18 @@ export const createPipelineCommand = (pipeline: string, brief: string) =>
 						})),
 					})),
 				});
+				for (const scope of results) {
+					await writeScopeReport(repoRoot, {
+						id: scope.scopeId,
+						tasks: scope.tasks.map((task) => ({
+							id: task.taskId,
+							exitCode: task.exitCode,
+							command: task.command,
+							durationMs: task.durationMs,
+							cached: task.cached,
+						})),
+					});
+				}
 				if (flags.json) {
 					writeJson(context, { status: "ok", pipeline, scopes: results });
 				} else {

@@ -16,12 +16,17 @@ vi.mock("../src/reports/cache", () => ({
 	ensureCacheLayout: vi.fn(),
 }));
 
+vi.mock("../src/docker/compose", () => ({
+	validateComposeFile: vi.fn(),
+}));
+
 import { doctorCommand } from "../src/cli/commands/doctor";
 import { infraUpCommand } from "../src/cli/commands/infra";
 import { loadRepoContext } from "../src/cli/commands/shared";
 import type { ToolkitConfig } from "../src/core/config/types";
 import { execCommand } from "../src/core/exec";
 import { findRepoRootOrThrow } from "../src/core/root";
+import { validateComposeFile } from "../src/docker/compose";
 import { ensureCacheLayout } from "../src/reports/cache";
 
 const createContext = () => {
@@ -94,6 +99,7 @@ describe("infra and doctor commands", () => {
 			stdout: "ok",
 			stderr: "",
 		});
+		vi.mocked(validateComposeFile).mockResolvedValue();
 
 		const { context, stdout } = createContext();
 		const run = await loadCommandFn(infraUpCommand);
@@ -111,6 +117,7 @@ describe("infra and doctor commands", () => {
 			stderr: "",
 		});
 		vi.mocked(ensureCacheLayout).mockResolvedValue();
+		vi.mocked(validateComposeFile).mockResolvedValue();
 
 		const { context, stdout } = createContext();
 		const run = await loadCommandFn(doctorCommand);

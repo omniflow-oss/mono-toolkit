@@ -24,3 +24,5 @@ Tasks are defined in `config/tasks.json` under `taskGraph`.
 ## Caching
 
 If `cacheable` is true and all outputs are newer than inputs, the task is skipped and marked `cached` in reports.
+
+Metadata is stored at `.cache/mono-toolkit/cache/tasks.json` with input hashes and output paths.

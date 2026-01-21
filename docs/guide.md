@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-pnpm add -D ofcx/mono-toolkit
+pnpm add -D @ofcx/mono-toolkit
 ```
 
 ## Initialize a repo

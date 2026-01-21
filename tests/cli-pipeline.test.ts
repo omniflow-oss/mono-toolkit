@@ -14,6 +14,7 @@ vi.mock("../src/tasks/execute", () => ({
 
 vi.mock("../src/reports/write", () => ({
 	writeSummaryReport: vi.fn(),
+	writeScopeReport: vi.fn(),
 }));
 
 vi.mock("../src/reports/cache", () => ({
@@ -24,7 +25,7 @@ import { createPipelineCommand } from "../src/cli/commands/pipeline";
 import { loadRepoContext } from "../src/cli/commands/shared";
 import { selectScopes } from "../src/cli/select";
 import type { ScopeRecord, ToolkitConfig } from "../src/core/config/types";
-import { writeSummaryReport } from "../src/reports/write";
+import { writeScopeReport, writeSummaryReport } from "../src/reports/write";
 import { executePipeline } from "../src/tasks/execute";
 
 const createContext = () => {
@@ -141,6 +142,7 @@ describe("pipeline command", () => {
 		const payload = JSON.parse(stdout.join("").trim());
 		expect(payload.status).toBe("ok");
 		expect(writeSummaryReport).toHaveBeenCalled();
+		expect(writeScopeReport).toHaveBeenCalled();
 	});
 
 	it("writes text output and applies jobs override", async () => {

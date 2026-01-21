@@ -18,6 +18,7 @@
 - `contracts:drift`
 - `contracts:breaking`
 - `contracts:build`
+- `contracts:client`
 
 ## Docs
 

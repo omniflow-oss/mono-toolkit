@@ -13,7 +13,7 @@ Deterministic Docker-first monorepo tooling for Quarkus services, Nuxt apps, sha
 ## Quick start
 
 ```bash
-pnpm add -D ofcx/mono-toolkit
+pnpm add -D @ofcx/mono-toolkit
 npx mono-toolkit init
 ```
 

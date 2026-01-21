@@ -40,4 +40,26 @@ describe("runDocsTask", () => {
 			args: ["pnpm", "-C", "/repo/docs", "build"],
 		});
 	});
+
+	it("runs docs lint from repo root", async () => {
+		vi.mocked(runInDocker).mockResolvedValue({
+			exitCode: 0,
+			stdout: "ok",
+			stderr: "",
+		});
+
+		const result = await runDocsTask({
+			repoRoot: "/repo",
+			docker,
+			docs,
+			taskId: "docs:lint",
+		});
+
+		expect(result.exitCode).toBe(0);
+		expect(vi.mocked(runInDocker)).toHaveBeenCalledWith({
+			repoRoot: "/repo",
+			docker,
+			args: ["pnpm", "-C", "/repo", "docs:lint"],
+		});
+	});
 });
