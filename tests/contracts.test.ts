@@ -7,6 +7,7 @@ import type {
 	ContractsConfig,
 	DockerConfig,
 	GitConfig,
+	PathsConfig,
 	ScopeRecord,
 } from "../src/core/config/types";
 
@@ -39,9 +40,19 @@ const contracts: ContractsConfig = {
 	root: "contracts",
 	runtimePath: "/q/openapi?format=json",
 	allowlist: [],
+	driftIgnore: [],
 };
 
 const git: GitConfig = { defaultBranch: "main", allowFetchBase: false };
+const paths: PathsConfig = {
+	backServices: "back/services",
+	backLibs: "back/libs",
+	frontApps: "front/apps",
+	frontPackages: "front/packages",
+	contracts: "contracts",
+	docs: "docs",
+	infra: "infra",
+};
 
 const serviceScope: ScopeRecord = {
 	id: "back:service:alpha",
@@ -71,6 +82,7 @@ describe("runContractsTask", () => {
 			docker,
 			contracts,
 			git,
+			paths,
 			scope: serviceScope,
 			taskId: "contracts:lint",
 		});
@@ -97,6 +109,7 @@ describe("runContractsTask", () => {
 			docker,
 			contracts,
 			git,
+			paths,
 			scope: serviceScope,
 			taskId: "contracts:drift",
 		});
@@ -127,6 +140,7 @@ describe("runContractsTask", () => {
 			docker,
 			contracts,
 			git,
+			paths,
 			scope: serviceScope,
 			taskId: "contracts:breaking",
 		});
@@ -141,6 +155,9 @@ describe("runContractsTask", () => {
 		const specPath = path.join(repoRoot, "contracts", "alpha", "openapi.yaml");
 		await fs.mkdir(path.dirname(specPath), { recursive: true });
 		await fs.writeFile(specPath, "openapi: 3.0.0", "utf8");
+		await fs.mkdir(path.join(repoRoot, "front", "apps", "web"), {
+			recursive: true,
+		});
 		vi.mocked(runInDocker)
 			.mockResolvedValueOnce({ exitCode: 0, stdout: "", stderr: "" })
 			.mockResolvedValueOnce({ exitCode: 0, stdout: "client", stderr: "" });
@@ -150,11 +167,32 @@ describe("runContractsTask", () => {
 			docker,
 			contracts,
 			git,
+			paths,
 			scope: serviceScope,
 			taskId: "contracts:client",
 		});
 
 		expect(result.exitCode).toBe(0);
+		const clientPath = path.join(
+			repoRoot,
+			"front",
+			"packages",
+			"api",
+			"src",
+			"services",
+			"alpha",
+			"client.ts",
+		);
+		const pluginPath = path.join(
+			repoRoot,
+			"front",
+			"apps",
+			"web",
+			"plugins",
+			"api.ts",
+		);
+		await expect(fs.stat(clientPath)).resolves.toBeDefined();
+		await expect(fs.stat(pluginPath)).resolves.toBeDefined();
 	});
 
 	it("rejects non-allowlisted services", async () => {
@@ -171,6 +209,7 @@ describe("runContractsTask", () => {
 				docker,
 				contracts: { ...contracts, allowlist: ["beta"] },
 				git,
+				paths,
 				scope: serviceScope,
 				taskId: "contracts:lint",
 			}),

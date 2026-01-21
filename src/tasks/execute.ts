@@ -104,6 +104,7 @@ const runTask = async (options: {
 			docker: options.docker,
 			contracts: options.config.contracts,
 			git: options.config.git,
+			paths: options.config.paths,
 			scope: options.scope,
 			taskId: options.taskId,
 		});

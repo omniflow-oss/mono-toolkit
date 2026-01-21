@@ -1,12 +1,22 @@
 {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"type": "object",
-	"required": ["authoritative", "root", "runtimePath", "allowlist"],
+	"required": [
+		"authoritative",
+		"root",
+		"runtimePath",
+		"allowlist",
+		"driftIgnore"
+	],
 	"properties": {
 		"authoritative": { "type": "string", "enum": ["design", "runtime"] },
 		"root": { "type": "string" },
 		"runtimePath": { "type": "string" },
 		"allowlist": {
+			"type": "array",
+			"items": { "type": "string" }
+		},
+		"driftIgnore": {
 			"type": "array",
 			"items": { "type": "string" }
 		}

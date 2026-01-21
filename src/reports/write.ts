@@ -11,6 +11,7 @@ export interface ReportSummary {
 			command?: string[];
 			durationMs?: number;
 			cached?: boolean;
+			errorExcerpt?: string;
 		}>;
 	}>;
 }

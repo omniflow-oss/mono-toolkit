@@ -80,6 +80,8 @@ export const createPipelineCommand = (pipeline: string, brief: string) =>
 							command: task.command,
 							durationMs: task.durationMs,
 							cached: task.cached,
+							errorExcerpt:
+								task.exitCode !== 0 ? task.stderr.slice(0, 500) : undefined,
 						})),
 					})),
 				});
@@ -92,6 +94,8 @@ export const createPipelineCommand = (pipeline: string, brief: string) =>
 							command: task.command,
 							durationMs: task.durationMs,
 							cached: task.cached,
+							errorExcerpt:
+								task.exitCode !== 0 ? task.stderr.slice(0, 500) : undefined,
 						})),
 					});
 				}

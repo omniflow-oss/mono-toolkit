@@ -13,7 +13,7 @@ import { getPackageRoot } from "../../core/package-root";
 import { ensureCacheLayout } from "../../reports/cache";
 import { writeJson, writeText } from "../output";
 
-export const initCommand = buildCommand({
+export const initCommand = buildCommand<{ json: boolean }, [], CommandContext>({
 	parameters: {
 		flags: {
 			json: { kind: "boolean", brief: "Output JSON", default: false },
@@ -44,6 +44,9 @@ export const initCommand = buildCommand({
 		);
 
 		await ensureCacheLayout(repoRoot);
+
+		await ensureDir(path.join(repoRoot, "contracts"));
+		await ensureDir(path.join(repoRoot, "docs"));
 
 		const infraDir = path.join(repoRoot, "infra");
 		await ensureDir(infraDir);

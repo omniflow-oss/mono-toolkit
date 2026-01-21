@@ -2,5 +2,6 @@
 	"authoritative": "design",
 	"root": "contracts",
 	"runtimePath": "/q/openapi?format=json",
-	"allowlist": []
+	"allowlist": [],
+	"driftIgnore": []
 }

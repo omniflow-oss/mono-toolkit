@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: Dockerfile.tools
     working_dir: /workspace
+    environment:
+      - PNPM_STORE_DIR=/pnpm-store
     volumes:
       - ../:/workspace
       - ../.cache/mono-toolkit/cache/pnpm-store:/pnpm-store

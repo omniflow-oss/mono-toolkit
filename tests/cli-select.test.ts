@@ -47,6 +47,7 @@ const baseConfig: ToolkitConfig = {
 		root: "contracts",
 		runtimePath: "",
 		allowlist: [],
+		driftIgnore: [],
 	},
 	docs: { root: "docs" },
 	policies: { sanitizePattern: "[a-z0-9-]", maxNameLength: 64 },

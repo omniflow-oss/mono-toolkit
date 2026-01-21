@@ -36,3 +36,13 @@ Each config file is validated against schemas in `schemas/**`. Invalid config ex
   }
 }
 ```
+
+Contracts config example:
+
+```json
+{
+  "contracts": {
+    "driftIgnore": ["#/info/version"]
+  }
+}
+```

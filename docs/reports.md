@@ -10,6 +10,7 @@ Reports are written under `.cache/mono-toolkit/reports`.
 - status
 - scopes + task results
 - task metadata (command, duration, cached)
+- error excerpts when a task fails
 
 ## Scope reports
 

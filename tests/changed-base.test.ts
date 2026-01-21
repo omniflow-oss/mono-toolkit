@@ -6,10 +6,10 @@ import * as execModule from "../src/core/exec";
 describe("resolveBaseRef", () => {
 	beforeEach(() => {
 		vi.restoreAllMocks();
-		process.env.GITHUB_BASE_REF = undefined;
-		process.env.CI_MERGE_REQUEST_TARGET_BRANCH_NAME = undefined;
-		process.env.CI_DEFAULT_BRANCH = undefined;
-		process.env.CHANGE_TARGET = undefined;
+		process.env.GITHUB_BASE_REF = "";
+		process.env.CI_MERGE_REQUEST_TARGET_BRANCH_NAME = "";
+		process.env.CI_DEFAULT_BRANCH = "";
+		process.env.CHANGE_TARGET = "";
 	});
 
 	it("returns provided since ref", async () => {

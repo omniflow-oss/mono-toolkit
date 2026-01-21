@@ -39,6 +39,11 @@
 - `delete <type> <name>`
 - `new feature <name> --in <serviceScope>`
 
+## Tooling tests
+
+- `tooling:test`
+- `tooling:test:e2e`
+
 ## Flags
 
 ```

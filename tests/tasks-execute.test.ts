@@ -59,6 +59,7 @@ const baseConfig: import("../src/core/config/types").ToolkitConfig = {
 		root: "contracts",
 		runtimePath: "/q/openapi?format=json",
 		allowlist: [],
+		driftIgnore: [],
 	},
 	docs: { root: "docs" },
 	policies: { sanitizePattern: "[a-z0-9-]", maxNameLength: 64 },

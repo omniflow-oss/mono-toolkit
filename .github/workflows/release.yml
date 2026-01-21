@@ -2,18 +2,19 @@ name: release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -26,9 +27,29 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - name: Install
         run: pnpm install --frozen-lockfile
+      - name: Compute version
+        id: autosemver
+        run: node scripts/autosemver.mjs
+      - name: Stop if no release
+        if: steps.autosemver.outputs.released != 'true'
+        run: echo "No release needed."
+      - name: Update lockfile
+        if: steps.autosemver.outputs.released == 'true'
+        run: pnpm install --lockfile-only
+      - name: Commit release
+        if: steps.autosemver.outputs.released == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json pnpm-lock.yaml
+          git commit -m "chore(release): v${{ steps.autosemver.outputs.version }}"
+          git tag v${{ steps.autosemver.outputs.version }}
+          git push origin main --follow-tags
       - name: Build
+        if: steps.autosemver.outputs.released == 'true'
         run: pnpm build
       - name: Publish
+        if: steps.autosemver.outputs.released == 'true'
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

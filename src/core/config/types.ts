@@ -74,6 +74,7 @@ export interface ContractsConfig {
 	root: string;
 	runtimePath: string;
 	allowlist: string[];
+	driftIgnore: string[];
 }
 
 export interface DocsConfig {
